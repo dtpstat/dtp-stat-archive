@@ -19,7 +19,7 @@ GRANT ALL PRIVILEGES ON DATABASE *database_name* TO *role_name*;
 -  NPM зависимости: `npm install`
 - `npx` пакет глобально: `npm install -g npx`
 - создать папку "etc" в папке "dtpmap" и добавить туда три файла:
-- secret_key.txt с секретным ключем для django
+- secret_key.txt с секретным ключом для django
 - database.txt с названием базы, логином и паролем через пробел
 
 ### Разработка
