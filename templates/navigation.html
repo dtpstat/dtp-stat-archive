@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<nav class="navbar topbar navbar-expand">
+    <div class="container">
+        <a class="navbar-brand" href="/"><img src="{% static 'media/logo.png' %}"
+                                              style="width: 50px;height: auto;margin-right: 10px"> Карта ДТП</a>
+
+        <ul class="nav navbar-nav ml-auto">
+            <h3>
+                {% if region %}
+                    {{ region }}
+                    {% if region.parent_region %}
+                        | {{ region.parent_region }}
+                    {% endif %}
+                {% else %}
+                    <a href="https://twitter.com/dtp_stat"><i class="fa fa-twitter-square" aria-hidden="true"></i> dtp_stat</a>
+                {% endif %}
+            </h3>
+        </ul>
+
+    </div>
+</nav>

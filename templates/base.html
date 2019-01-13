@@ -1,0 +1,35 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="google-site-verification" content="06wnJrpzVrL1VyNldXxXHuxeks1dVIqur-Qmg2-X3xU" />
+
+    {% include "head.html" %}
+
+    {% block page-styles %}
+    {% endblock %}
+
+
+
+</head>
+<body>
+{% include "navigation.html" %}
+
+{% block content %}
+{% endblock %}
+
+{% include "footer.html" %}
+
+{% block scripts %}
+    <script>
+        if ($(document).height() <= $(window).height())
+            $("footer").addClass("fixed-bottom");
+    </script>
+{% endblock %}
+
+{% block page-scripts %}
+{% endblock %}
+
+</body>
+</html>

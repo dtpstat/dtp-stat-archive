@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load humanize %}
+
+{% block page-styles %}
+    <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet" type="text/css">
+    <meta property="og:title" content="Карта ДТП - {{ region_item }}"/>
+    <title>Карта ДТП - {{ region_item }}</title>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container no-area">
+        <h2 class="text-center">Привет! Твой регион пока не добавлен на карту.</h2><br>
+
+
+    </div>
+{% endblock %}

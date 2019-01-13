@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load humanize %}
+
+{% block page-styles %}
+    <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="value_preposition ">
+        <div class="container">
+            <form class="find-region">
+
+                <div class="form-group">
+                    <input type="text" id="regionSearch" class="form-control"
+                           placeholder="Введите название района/города/региона">
+                </div>
+            </form>
+            <div class="region-list">
+                <p class="item"><a href="/moskva/">Москва</a></p>
+                <p><a href="/sankt-peterburg/">Санкт-Петербург</a></p>
+                <p><a href="/respublika-tatarstan-tatarstan_kazan/">Казань</a></p>
+                <p><a href="/nizhegorodskaia-oblast_nizhnii-novgorod/">Нижний Новгород</a></p>
+                <p class="item"><a href="/krasnodarskii-krai_krasnodar/">Краснодар</a></p>
+                <p class="item"><a href="/iaroslavskaia-oblast_iaroslavl/">Ярославль</a></p>
+                <p class="item"><a href="/kirovskaia-oblast_kirov/">Киров</a></p>
+                <p class="item"><a href="/vladimirskaia-oblast_vladimir/">Владимир</a></p>
+                <p class="item"><a href="/chuvashskaia-respublika-chuvashiia_cheboksary/">Чебоксары</a></p>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="container summary">
+        <h2 style="margin-bottom: 50px">Человек погибло</h2>
+        <div class="row">
+
+            <div class="col-md-4 date-summary">
+                <p class="date">В среднем за день</p>
+                <p class="count">52</p>
+            </div>
+            <div class="col-md-4 date-summary">
+                <p class="date">За октябрь</p>
+                <p class="count">1821</p>
+            </div>
+            <div class="col-md-4 date-summary">
+                <p class="date">С начала года</p>
+                <p class="count">14800</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <hr>
+    <div class=" container">
+    <div class="row" style="height: 100px">
+        <div class="col"><a href="https://daily.afisha.ru/news/18145-aktivisty-sozdali-kartu-vseh-dtp-v-moskve/"><img src="{% static "media/medialogo/media1.png" %}" class="media-logo"></a></div>
+        <div class="col"><a href="https://tjournal.ru/73169-moskovskie-aktivisty-zapustili-onlayn-kartu-vseh-dtp-v-gorode"><img src="{% static "media/medialogo/media2.png" %}" class="media-logo"></a></div>
+        <div class="col"><a href="https://rg.ru/2018/07/04/reg-cfo/v-moskve-razrabotali-narodnuiu-kartu-dtp.html"><img src="{% static "media/medialogo/media3.png" %}" class="media-logo"></a></div>
+        <div class="col"><a href="https://www.msk.kp.ru/daily/26851/3893361/"><img src="{% static "media/medialogo/media4.png" %}" class="media-logo"></a></div>
+        <div class="col"><a href="https://www.the-village.ru/village/city/news-city/317621-karta-dtp"><img src="{% static "media/medialogo/media5.png" %}" class="media-logo"></a></div>
+        <div class="col"><a href="https://360tv.ru/news/obschestvo/sozdana-onlajnkarta-dtp-moskvy/"><img src="{% static "media/medialogo/media6.png" %}" class="media-logo"></a></div>
+    </div>
+    </div>
+
+
+{% endblock %}
+
+{% block page-scripts %}
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+    <script>
+        (function () {
+            function makeSearch(term, callback) {
+                $.get('/api/search_region/?term=' + term).done(function (data) {
+                    options = data.regions.map(function (region) {
+                        return {
+                            label: region.name,
+                            value: region.name,
+                            actualValue: region.alias
+                        }
+                    })
+                    callback(options);
+                });
+            }
+
+            function goToRegionPage(regionAlias) {
+                var url = '/' + regionAlias + '/';
+                window.location.href = url;
+            }
+
+            $('#regionSearch').autocomplete({
+                minLength: 2,
+                source: function (request, response) {
+                    makeSearch(request.term, response);
+                },
+                select: function (event, ui) {
+                    goToRegionPage(ui.item.actualValue);
+                }
+            });
+        })();
+    </script>
+{% endblock %}

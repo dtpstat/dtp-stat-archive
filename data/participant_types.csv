@@ -1,0 +1,4 @@
+name,label,value
+auto,автомобили,true
+pedestrian,пешеходы,true
+bicycle,велосипедисты,true

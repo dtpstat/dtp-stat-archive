@@ -1,0 +1,14 @@
+Django
+psycopg2
+tqdm
+djangorestframework
+django-filter
+requests
+gunicorn
+BeautifulSoup4
+django-webpack-loader==0.6.0
+python-slugify
+geopy
+PyYAML>=4.2b1
+ua-parser==0.8.0
+user-agents==1.1.0

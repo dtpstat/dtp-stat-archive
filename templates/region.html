@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+    <div class="container ">
+        <h1>{{ region.name }}</h1>
+        {% for children_region in children_regions %}
+            <p><a href="/{{ region.alias }}/{{ children_region.alias }}/">{{ children_region }}</a></p>
+        {% endfor %}
+        <hr>
+        {% for mvc in mvc_list %}
+            <p><a href="{{ mvc.alias }}">{{ mvc }}</a></p>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
