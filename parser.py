@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from dtp_parser import update_regions
 from dtp_parser import update_dtp
 
