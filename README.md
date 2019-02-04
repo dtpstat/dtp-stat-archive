@@ -4,7 +4,7 @@
 Обсуждение проекта - https://t.me/crash_map
 
 ### Установка
-- Python 3.6
+- Python 3.6.3
 - Postgres 10  `brew install postgres`
 - Зависимости `pip3 install -r requirements.txt`
 - Создайте базу данных: 
