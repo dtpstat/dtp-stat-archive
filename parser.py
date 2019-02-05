@@ -12,7 +12,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../dtpmap/dtpmap'))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dtpmap.settings")
 django.setup()
 
-locale.setlocale(locale.LC_TIME, "ru_RU")
+try:
+    locale.setlocale(locale.LC_TIME, "ru_RU")
+except locale.Error:
+    # right locale for GNU/Linux
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF8")
+
 warnings.filterwarnings('ignore')
 
 from dtpmapapp import models
