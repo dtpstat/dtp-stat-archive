@@ -78,7 +78,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dtpmap.wsgi.application'
 
 with open('dtpmap/etc/database.txt') as f:
-    database_name, database_user, database_password = f.read().strip().split(" ")
+    database_host, database_port, database_name, database_user, database_password = f.read().strip().split(" ")
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -89,8 +89,8 @@ DATABASES = {
        'NAME': database_name,
        'USER': database_user,
        'PASSWORD': database_password,
-       'HOST': 'localhost',
-       'PORT': '5432',
+       'HOST': database_host,
+       'PORT': database_port,
     },
 }
 
