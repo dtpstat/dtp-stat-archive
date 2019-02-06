@@ -113,10 +113,10 @@ YOUR-SECRET-KEY
 EOF 
 ```
 
-Create database configuration:
+Create database configuration (hostname port name user password):
 
 ```bash
-$ echo "dtp_db postgres MySuperSecretPassword123" > dtpmap/etc/database.txt
+$ echo "localhost 5432 dtp_db postgres MySuperSecretPassword123" > dtpmap/etc/database.txt
 ```
 
 **Step 7**. Run [Django migrations](https://docs.djangoproject.com/en/2.1/topics/migrations/)
