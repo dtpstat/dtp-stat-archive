@@ -20,7 +20,12 @@ django.setup()
 from dtpmapapp import models
 from django.shortcuts import get_object_or_404
 
-locale.setlocale(locale.LC_TIME, "ru_RU")
+try:
+    locale.setlocale(locale.LC_TIME, "ru_RU")
+except locale.Error:
+    # right locale for GNU/Linux
+    locale.setlocale(locale.LC_TIME, "ru_RU.UTF8")
+
 warnings.filterwarnings('ignore')
 
 
