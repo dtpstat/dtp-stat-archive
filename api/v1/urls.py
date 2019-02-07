@@ -6,6 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     MVCViewSet,
+    CarViewSet,
     MVCParticipantTypeViewSet,
     MVCTypeViewSet,
     NearbyViewSet,
@@ -15,6 +16,7 @@ from .views import (
 
 router = DefaultRouter()
 router.register(r"mvc", MVCViewSet, basename="mvc")
+router.register(r"cars", CarViewSet, basename="cars")
 router.register(
     r"mvc-participant-types",
     MVCParticipantTypeViewSet,

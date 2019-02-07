@@ -14,6 +14,7 @@ from dtpmapapp.models import (
 )
 
 from .serializers import (
+    CarSerializer,
     MVCParticipantTypeSerializer,
     MVCSerializer,
     MVCTypeSerializer,
@@ -26,6 +27,11 @@ from .serializers import (
 class MVCViewSet(viewsets.ModelViewSet):
     queryset = MVC.objects.all()
     serializer_class = MVCSerializer
+
+
+class CarViewSet(viewsets.ModelViewSet):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
 
 
 class MVCParticipantTypeViewSet(viewsets.ModelViewSet):

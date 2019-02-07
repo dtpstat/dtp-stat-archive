@@ -40,6 +40,12 @@ class MVCSerializer(serializers.ModelSerializer):
         )
 
 
+class CarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Car
+        fields = ("id", "brand", "car_model", "color", "manufacture_year")
+
+
 class MVCTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MVCType
