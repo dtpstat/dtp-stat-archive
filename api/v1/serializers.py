@@ -49,7 +49,7 @@ class CarSerializer(serializers.ModelSerializer):
 class MVCTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MVCType
-        fields = ("id", "name")
+        fields = ("id", "name", "alias")
 
 
 class MVCParticipantTypeSerializer(serializers.ModelSerializer):
