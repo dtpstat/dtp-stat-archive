@@ -135,6 +135,12 @@ Run this and follow instructions:
 $ ./manage.py createsuperuser --email admin@localhost --username admin
 ```
 
+Create `default_cache` table:
+
+```bash
+$ ./manage.py createcachetable
+```
+
 To check project backend run:
 
 ```bash
