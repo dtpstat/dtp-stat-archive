@@ -11,6 +11,7 @@ from .views import (
     MVCTypeViewSet,
     NearbyViewSet,
     OffenceViewSet,
+    ParticipantViewSet,
     StreetViewSet,
 )
 
@@ -25,6 +26,7 @@ router.register(
 router.register(r"mvc-types", MVCTypeViewSet, basename="mvc-types")
 router.register(r"nearby", NearbyViewSet, basename="nearby")
 router.register(r"offences", OffenceViewSet, basename="offences")
+router.register(r"participants", ParticipantViewSet, basename="participants")
 router.register(r"streets", StreetViewSet, basename="streets")
 
 

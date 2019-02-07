@@ -20,6 +20,7 @@ from .serializers import (
     MVCTypeSerializer,
     NearbySerializer,
     OffenceSerializer,
+    ParticipantSerializer,
     StreetSerializer,
 )
 
@@ -52,6 +53,11 @@ class NearbyViewSet(viewsets.ModelViewSet):
 class OffenceViewSet(viewsets.ModelViewSet):
     queryset = Nearby.objects.all()
     serializer_class = NearbySerializer
+
+
+class ParticipantViewSet(viewsets.ModelViewSet):
+    queryset = Participant.objects.all()
+    serializer_class = ParticipantSerializer
 
 
 class StreetViewSet(viewsets.ModelViewSet):

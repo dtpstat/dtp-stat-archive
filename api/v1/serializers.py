@@ -58,6 +58,22 @@ class MVCParticipantTypeSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "label", "value")
 
 
+class ParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Participant
+        fields = (
+            "id",
+            "role",
+            "offences",
+            "driving_experience",
+            "status",
+            "gender",
+            "abscond",
+            "mvc",
+            "car",
+        )
+
+
 class NearbySerializer(serializers.ModelSerializer):
     class Meta:
         model = Nearby
