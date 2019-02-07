@@ -21,6 +21,7 @@ from .serializers import (
     NearbySerializer,
     OffenceSerializer,
     ParticipantSerializer,
+    RegionSerializer,
     StreetSerializer,
 )
 
@@ -58,6 +59,11 @@ class OffenceViewSet(viewsets.ModelViewSet):
 class ParticipantViewSet(viewsets.ModelViewSet):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
+
+
+class RegionViewSet(viewsets.ModelViewSet):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
 
 
 class StreetViewSet(viewsets.ModelViewSet):

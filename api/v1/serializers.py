@@ -86,6 +86,22 @@ class OffenceSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = (
+            "id",
+            "name",
+            "alias",
+            "oktmo_code",
+            "level",
+            "parent_region",
+            "status",
+            "longitude",
+            "latitude",
+        )
+
+
 class StreetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Street
