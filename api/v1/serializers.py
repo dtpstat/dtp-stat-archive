@@ -1,6 +1,43 @@
 from rest_framework import serializers
 
-from dtpmapapp.models import MVCParticipantType, MVCType, Nearby, Offence, Street
+from dtpmapapp.models import (
+    MVC,
+    Car,
+    MVCParticipantType,
+    MVCType,
+    Nearby,
+    Offence,
+    Participant,
+    Region,
+    Street,
+    UpdateLog,
+)
+
+
+class MVCSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MVC
+        fields = (
+            "id",
+            "region",
+            "alias",
+            "datetime",
+            "address",
+            "street",
+            "type",
+            "participant_type",
+            "longitude",
+            "latitude",
+            "conditions",
+            "dead",
+            "injured",
+            "participants",
+            "scheme",
+            "nearby",
+            "source_data",
+            "geo_updated",
+            "created_at",
+        )
 
 
 class MVCTypeSerializer(serializers.ModelSerializer):
@@ -31,4 +68,3 @@ class StreetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Street
         fields = ("id", "name")
-

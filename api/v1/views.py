@@ -1,14 +1,31 @@
 from rest_framework import viewsets
 
-from dtpmapapp.models import MVCParticipantType, MVCType, Nearby, Offence, Street
+from dtpmapapp.models import (
+    MVC,
+    Car,
+    MVCParticipantType,
+    MVCType,
+    Nearby,
+    Offence,
+    Participant,
+    Region,
+    Street,
+    UpdateLog,
+)
 
 from .serializers import (
     MVCParticipantTypeSerializer,
+    MVCSerializer,
     MVCTypeSerializer,
     NearbySerializer,
     OffenceSerializer,
     StreetSerializer,
 )
+
+
+class MVCViewSet(viewsets.ModelViewSet):
+    queryset = MVC.objects.all()
+    serializer_class = MVCSerializer
 
 
 class MVCParticipantTypeViewSet(viewsets.ModelViewSet):

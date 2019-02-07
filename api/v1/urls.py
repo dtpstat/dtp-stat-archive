@@ -5,6 +5,7 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    MVCViewSet,
     MVCParticipantTypeViewSet,
     MVCTypeViewSet,
     NearbyViewSet,
@@ -13,6 +14,7 @@ from .views import (
 )
 
 router = DefaultRouter()
+router.register(r"mvc", MVCViewSet, basename="mvc")
 router.register(
     r"mvc-participant-types",
     MVCParticipantTypeViewSet,
