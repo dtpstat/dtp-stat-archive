@@ -1,32 +1,38 @@
+
 # Карта ДТП
 
 Проект "Карта ДТП" (https://dtp-stat.ru) 
 
 Обсуждение проекта - https://t.me/crash_map
 
-## Installation
-
-### Requirements
-
-- Python 3.7
-- Postgres 11
+## Developer Environment (Docker)
+### Installation
+#### Requirements
+- Python >=3.6
+- Postgresql >=10.6
 - docker
 - docker-compose
 - docker-machine (for win & mac)
 
-### Usage
-
-`docker-compose up -d --build`
-
-### Configure project
+#### Prepare and Configure Project
 
 Project configured by .dockerenv file in docker folder.
-Copy .dockerenv.example and set variables.
 
-[Secret key generator](https://www.lastpass.com/ru/password-generator) recomended length 50 symbols.
+Rename `docker/.dockerenv.example` to `docker/.dockerenv` and set variables:
 
+* `SECRET_KEY`, - secret key, you can generate it with:
+    * [Secret key generator](https://www.lastpass.com/ru/password-generator) (recomended length: 50 symbols)
+    * oneliner: 
 
-First time need create superuser
+```bash
+    python3 -c "import random, string; print('SECRET_KEY=\"%s\"'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))"
+```
+
+* `DEBUG`, - set it to `true`
+
+#### Start project
+1. Build and up containers: `docker-compose up -d --build`
+2. First time need create superuser
 
 Run this and follow instructions:
 
@@ -34,16 +40,7 @@ Run this and follow instructions:
 $ docker-compose exec app ./manage.py createsuperuser --email admin@localhost --username admin
 ```
 
-... and authorize on [this](http://127.0.0.1:8000/admin1/) site 
-
-
-- NPM зависимости: `npm install`
-- `npx` пакет глобально: `npm install -g npx`
-
-### Разработка
-
-В дополнение к запуску сервера Django нужно запустить webpack 
-`npm start` для генерации JavaScript кода.
+3. Authorize on http://127.0.0.1:8000/admin1.
 
 ### Запуск парсера данных со stat.gibdd.ru
 
