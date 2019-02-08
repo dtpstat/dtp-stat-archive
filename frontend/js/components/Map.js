@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import HeatmapOverlay from 'leaflet-heatmap';
-import { getColorByParticipantTypeId, mvcHasDeadParticipants} from '../services/mvcs';
+import {getColorByParticipantTypeId, getMvcTypeName, mvcHasDeadParticipants} from '../services/mvcs';
 
 const MAP_ID = 'dtp-map';
 const markerMinRadius = 5;
