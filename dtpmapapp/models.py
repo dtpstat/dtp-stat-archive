@@ -17,9 +17,9 @@ class Region(models.Model):
 
     def get_absolute_url(self):
         if self.parent_region:
-            return '/' + self.parent_region.alias + '_' + self.alias + '/'
+            return f'/{self.parent_region.alias}_{self.alias}/'
         else:
-            return '/' + self.alias + '/'
+            return f'/{self.alias}/'
 
 
 class UpdateLog(models.Model):
@@ -39,7 +39,7 @@ class Car(models.Model):
     manufacture_year = models.IntegerField(help_text="Car manufacture year", null=True, blank=True, default=None, db_index=True)
 
     def __str__(self):
-        return self.brand + " " + self.car_model
+        return f"{self.brand} {self.car_model}""
 
 
 class Offence(models.Model):
@@ -95,10 +95,10 @@ class MVC(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.type.name + " " + self.region.name + " " + str(self.datetime)
+        return f"{self.type.name} {self.region.name} {self.datetime}"
 
     def get_absolute_url(self):
-        return '/dtp/' + self.alias + '/'
+        return f'/dtp/{self.alias}/'
 
 class Participant(models.Model):
     role = models.CharField(max_length=1000, help_text="Participant role", null=True, blank=True, default=None, db_index=True)
@@ -111,4 +111,4 @@ class Participant(models.Model):
     car = models.ForeignKey(Car, help_text="Car", null=True, blank=True, default=None, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.role + " " + self.gender + self.mvc.region.name
+        return f"{self.role} {self.gender} {self.mvc.region.name}"
