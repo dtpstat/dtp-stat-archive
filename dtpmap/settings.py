@@ -11,21 +11,23 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+env = environ.Env(
+    ALLOWED_HOSTS=(list, []),
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, ''),
+)
+
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+
+ADMINS = [env('ADMINS', tuple, ('Admin', 'root@localhost'))]
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INTERNAL_IPS = ['127.0.0.1']
+FIRST_DAY_OF_WEEK = 1
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-with open('dtpmap/etc/secret_key.txt') as f:
-    SECRET_KEY = f.read().strip()
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -77,23 +79,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dtpmap.wsgi.application'
 
-with open('dtpmap/etc/database.txt') as f:
-    database_host, database_port, database_name, database_user, database_password = f.read().strip().split(" ")
-
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-       'NAME': database_name,
-       'USER': database_user,
-       'PASSWORD': database_password,
-       'HOST': database_host,
-       'PORT': database_port,
-    },
+    'default': env.db(default='postgres://django:django@db:5432/django'),
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
