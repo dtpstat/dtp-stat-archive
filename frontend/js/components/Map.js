@@ -102,6 +102,11 @@ export default class Map extends Component {
         this.markers = [];
         mvcs.forEach(mvc => {
             let marker = new L.circleMarker([mvc.latitude, mvc.longitude], this.getMarkerOptions(mvc));
+            const date = moment(mvc.datetime);
+            const actionName = getMvcTypeName(mvc, this.props.dictionaries);
+            const tooltipText = `${date.format('DD.MM.YYYY HH:mm')}<br/>${actionName}<br/>Пострадали - ${mvc.injured}, погибли - ${mvc.dead}`;
+
+            marker.bindTooltip(tooltipText);
             this.mvcPointsLayer.addLayer(marker);
             this.markers.push(marker);
         });
