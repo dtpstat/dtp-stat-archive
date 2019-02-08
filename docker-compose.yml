@@ -22,3 +22,12 @@ services:
     ports:
       - "8000:8000"
     command: ["make", "app"]
+
+  node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    restart: always
+    volumes:
+        - ./:/app
+    command: sh -c "npm install && npm start"
