@@ -6,6 +6,7 @@ django-environ==0.4.5
 django-filter==2.1.0
 django-webpack-loader==0.6.0
 djangorestframework==3.9.1
+drf-yasg==1.12.1
 geographiclib==1.49
 geopy==1.18.1
 gunicorn==19.9.0

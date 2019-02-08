@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dtpmapapp',
     'rest_framework',
     'webpack_loader',
+    'drf_yasg',
     'django.contrib.sitemaps',
     'django.contrib.sites',
 ]
