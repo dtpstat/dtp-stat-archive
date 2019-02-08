@@ -5,8 +5,8 @@ import HeatmapOverlay from 'leaflet-heatmap';
 import { getColorByParticipantTypeId, mvcHasDeadParticipants} from '../services/mvcs';
 
 const MAP_ID = 'dtp-map';
-const markerMinRadius = 3;
-const markerMaxRadius = 10;
+const markerMinRadius = 5;
+const markerMaxRadius = 15;
 
 const heatmapConfig = {
     scaleRadius: true,
