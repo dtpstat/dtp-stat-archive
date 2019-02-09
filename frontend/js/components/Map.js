@@ -198,8 +198,6 @@ export default class Map extends Component {
 
         map.on('zoomend', this.handleZoomEnd);
 
-        map.on('resize moveend zoomend', this.updateMarkerVisibility);
-
         this.map = map;
 
         if (this.props.onMapReady) {
