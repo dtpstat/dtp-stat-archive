@@ -29,7 +29,7 @@ export default class Map extends Component {
         this.setRef = this.setRef.bind(this);
         this.handleLayerClick = this.handleLayerClick.bind(this);
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
-        this.updateMarkerVisibility = this.updateMarkerVisibility.bind(this);
+        this.handleMapChanges = this.handleMapChanges.bind(this);
 
         this.state = {
             markers: []
@@ -195,7 +195,7 @@ export default class Map extends Component {
         const zoom = this.getZoomByRegionLevel(this.props.regionLevel);
         map.setView(new L.LatLng(latitude, longitude), zoom);
         map.addLayer(osm);
-
+        map.on('resize moveend zoomend', this.handleMapChanges);
         map.on('zoomend', this.handleZoomEnd);
 
         map.on('resize moveend zoomend', this.updateMarkerVisibility);
@@ -261,9 +261,11 @@ export default class Map extends Component {
 
 Map.propTypes = {
     defaultCoord: PropTypes.object,
+    searchParams: PropTypes.object,
     dictionaries: PropTypes.object,
     mvcs: PropTypes.array,
     onMapReady: PropTypes.func,
     onMvcSelected: PropTypes.func,
+    onMapChanges: PropTypes.func,
     regionLevel: PropTypes.number,
 };

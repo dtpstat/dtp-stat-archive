@@ -51,10 +51,12 @@ export default class MapWithStats extends Component {
                 >
                     <Map
                         defaultCoord={this.props.defaultCoord}
+                        searchParams={this.props.searchParams}
                         dictionaries={this.props.dictionaries}
                         mvcs={this.props.mvcs}
                         mapObjectsMarkersData={this.props.mapObjectsMarkersData}
                         onMvcSelected={this.props.onMvcSelected}
+                        onMapChanges={this.props.onMapChanges}
                         regionLevel={this.props.regionLevel}
                     />
                 </div>
@@ -102,9 +104,11 @@ export default class MapWithStats extends Component {
 MapWithStats.props = {
     cityName: PropTypes.string,
     defaultCoord: PropTypes.object,
+    searchParams: PropTypes.object,
     dictionaries: PropTypes.object,
     mvcs: PropTypes.array,
     onMvcSelected: PropTypes.func,
+    onMapChanges: PropTypes.func,
     onToggleStats: PropTypes.func,
     regionLevel: PropTypes.number,
     showStats: PropTypes.bool,
