@@ -35,8 +35,6 @@ class MVCFilter(FilterSet):
 
     def filter_queryset(self, queryset):
         for name, value in self.form.cleaned_data.items():
-            if self.priority and name not in self.priority:
-                continue
             queryset = self.filters[name].filter(queryset, value)
             assert isinstance(queryset, models.QuerySet), (
                 "Expected '%s.%s' to return a QuerySet, but got a %s instead."
