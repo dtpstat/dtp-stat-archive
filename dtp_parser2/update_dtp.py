@@ -104,7 +104,6 @@ def add_street(area, source_street):
         return None
     else:
         street_item, created = models.Street.objects.get_or_create(
-            area=area,
             name=source_street
         )
         return street_item.id
