@@ -128,7 +128,8 @@ $ npm run build-production
 ```
 
 
-### Старт без Docker
+### Старт без Docker и изменения переменных окружения
+
 Если не хочется выкачивать все данные - вот бекап базы https://drive.google.com/open?id=1SPHyY-802U-USRQh3j4JfzhIO86eAaUp
 ###Backend:
     
