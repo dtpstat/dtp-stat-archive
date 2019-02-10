@@ -2,10 +2,14 @@ beautifulsoup4==4.7.1
 certifi==2018.11.29
 chardet==3.0.4
 Django==2.1.5
+django-cors-headers==2.4.0
 django-environ==0.4.5
 django-filter==2.1.0
+django-silk==3.0.1
 django-webpack-loader==0.6.0
 djangorestframework==3.9.1
+drf_ujson==1.2
+drf-yasg==1.12.1
 geographiclib==1.49
 geopy==1.18.1
 gunicorn==19.9.0
