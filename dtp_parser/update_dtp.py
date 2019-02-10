@@ -89,8 +89,8 @@ def add_mvc(source_crash_data, area, types):
     geo_data = update_geolocation(area, source_crash_data)
     mvc_item.street_id = geo_data['street_id']
     mvc_item.address = geo_data['address']
-    mvc_item.latitude = geo_data['latitude']
-    mvc_item.longitude = geo_data['longitude']
+    mvc_item.lat = geo_data['latitude']
+    mvc_item.lng = geo_data['longitude']
     mvc_item.geo_updated = geo_data['geo_updated']
     #mvc_item.geo_updated = False
 
@@ -296,24 +296,25 @@ def get_crashes_data(area):
 
 # проверяем дубликаты координат
 def check_coordinates_duplicates():
-    duplicates_values = models.MVC.objects.values('longitude', 'latitude').annotate(Count('id')).order_by().filter(id__count__gt=1)
-    duplicates = models.MVC.objects.filter(longitude__in=[item['longitude'] for item in duplicates_values],latitude__in=[item['latitude'] for item in duplicates_values])
+    duplicates_values = models.MVC.objects.values('lng', 'lat').annotate(Count('id')).order_by().filter(id__count__gt=1)
+    duplicates = models.MVC.objects.filter(lng__in=[item['lng'] for item in duplicates_values],lat__in=[item['latitude'] for item in duplicates_values])
 
     d = geopy.distance.vincenty(meters=10)
     for mvc in duplicates:
-        start = geopy.Point(mvc.latitude, mvc.longitude)
+        start = geopy.Point(mvc.lat, mvc.lng)
         new_point = d.destination(point=start, bearing=random.randint(0,360))
-        mvc.longitude = new_point.longitude
-        mvc.latitude = new_point.latitude
+        mvc.lng = new_point.lng
+        mvc.lat = new_point.lat
         mvc.save()
 
 
 def main():
     regions = models.Region.objects.filter(level__exact=2, status=True)
+    # print(regions)
 
     for area in tqdm(regions, desc="Выгрузка ДТП", leave=False):
-        if area.oktmo_code == "33250":
+        if area.parent_region.oktmo_code == "89":
             get_crashes_data(area)
 
-    check_coordinates_duplicates()
+    # check_coordinates_duplicates()
 

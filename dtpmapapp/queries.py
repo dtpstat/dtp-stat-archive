@@ -36,7 +36,7 @@ def get_mvcs_by_region(region_alias, area_alias=None):
 
     mvcs = mvcs_filtered.values(
         'id', 'alias', 'datetime', 'address', 'street', 'type_id',
-        'longitude', 'latitude', 'dead', 'injured', 'participant_type_id'
+        'lng', 'lat', 'dead', 'injured', 'participant_type_id'
     )
 
     nearyby_objects = mvcs_filtered.values('id', 'nearby__id')

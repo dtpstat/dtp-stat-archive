@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.db.models.indexes import Index
+
 
 
 class Region(models.Model):
@@ -82,8 +84,8 @@ class MVC(models.Model):
     street = models.ForeignKey(Street, help_text="MVC Street", null=True, blank=True, default=None, on_delete=models.SET_NULL, db_index=True)
     type = models.ForeignKey(MVCType, help_text="MVC Type", null=True, blank=True, default=None, on_delete=models.SET_NULL, db_index=True)
     participant_type = models.ForeignKey(MVCParticipantType, help_text="MVC Participant Type", null=True, blank=True, default=None, on_delete=models.SET_NULL, db_index=True)
-    longitude = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
-    latitude = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
+    lng = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
+    lat = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
     conditions = JSONField(help_text="MVC conditions", null=True, blank=True, default=None)
     dead = models.IntegerField(help_text="MVC dead count", null=True, blank=True, default=None, db_index=True)
     injured = models.IntegerField(help_text="MVC injured count", null=True, blank=True, default=None, db_index=True)
@@ -93,6 +95,13 @@ class MVC(models.Model):
     source_data = JSONField(help_text="Source data", null=True, blank=True, default=None)
     geo_updated = models.BooleanField(help_text="Geo updated", default=False)
     created_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            Index(fields=('id', 'lng', 'lat')),
+            Index(fields=('lng',)),
+            Index(fields=('lat',)),
+        ]
 
     def __str__(self):
         return self.type.name + " " + self.region.name + " " + str(self.datetime)

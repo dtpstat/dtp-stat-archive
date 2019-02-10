@@ -4,7 +4,7 @@ from . import models
 
 @admin.register(models.Region)
 class RegionAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('name',)
 
 
 @admin.register(models.MVC)
