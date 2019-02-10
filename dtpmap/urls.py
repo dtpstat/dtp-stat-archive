@@ -13,20 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
-from django.urls import path
 from django.contrib import admin
-from dtpmapapp import views
 from django.contrib.sitemaps import views as sitemapviews
+from django.urls import include, path, re_path
 from django.views.decorators.cache import cache_page
 
 from dtpmapapp import views
 from dtpmapapp.sitemaps import MVCSitemap, RegionSitemap
 
-sitemaps = {
-    'mvcs': MVCSitemap(),
-    'regions': RegionSitemap()
-}
+sitemaps = {"mvcs": MVCSitemap(), "regions": RegionSitemap()}
 
 old_api_patterns = [
     re_path(
@@ -45,10 +40,9 @@ old_api_patterns = [
 ]
 
 urlpatterns = [
-
-    url(r'^sitemap\.xml$', sitemapviews.index, {'sitemaps': sitemaps}),
-    url(
-        r'^sitemap-(?P<section>.+)\.xml$',
+    path("sitemap.xml", sitemapviews.index, {"sitemaps": sitemaps}),
+    re_path(
+        r"^sitemap-(?P<section>.+)\.xml$",
         cache_page(24 * 60 * 60)(sitemapviews.sitemap),
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
