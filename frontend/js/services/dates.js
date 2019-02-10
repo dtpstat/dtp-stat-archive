@@ -1,15 +1,15 @@
-export function calcRangesForDatePicker(minDate) {
+export function calcRangesForDatePicker(minDate, maxDate) {
     let ranges = {};
 
     let currentYear = moment().year();
-    for (let year = currentYear - 3; year <= currentYear; year++) {
+    for (let year = moment(minDate).year(); year <= currentYear; year++) {
         let start = moment({ year }).startOf('year');
         let end = moment({ year }).endOf('year');
         ranges[year] = [start, end];
     }
 
     if (minDate) {
-        ranges['За всё время'] = [moment(minDate), moment("2018-11-30")];
+        ranges['За всё время'] = [moment(minDate), moment(maxDate)];
     }
 
     return ranges;
