@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import HeatmapOverlay from 'leaflet-heatmap';
-import { getColorByParticipantTypeId, mvcHasDeadParticipants} from '../services/mvcs';
+import {getColorByParticipantTypeId, getMvcTypeName, mvcHasDeadParticipants} from '../services/mvcs';
 
 const MAP_ID = 'dtp-map';
-const markerMinRadius = 3;
-const markerMaxRadius = 10;
+const markerMinRadius = 5;
+const markerMaxRadius = 15;
 
 const heatmapConfig = {
     scaleRadius: true,
@@ -30,6 +30,7 @@ export default class Map extends Component {
         this.handleLayerClick = this.handleLayerClick.bind(this);
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
         this.handleMapChanges = this.handleMapChanges.bind(this);
+
 
         this.state = {
             markers: []
@@ -100,8 +101,14 @@ export default class Map extends Component {
     createMvcPointsLayer(mvcs) {
         this.mvcPointsLayer = new L.FeatureGroup();
         this.markers = [];
+        this.canvasRenderer = L.canvas({ padding: 0.5 });
         mvcs.forEach(mvc => {
             let marker = new L.circleMarker([mvc.latitude, mvc.longitude], this.getMarkerOptions(mvc));
+            const date = moment(mvc.datetime);
+            const actionName = getMvcTypeName(mvc, this.props.dictionaries);
+            const tooltipText = `${date.format('DD.MM.YYYY HH:mm')}<br/>${actionName}<br/>Пострадали - ${mvc.injured}, погибли - ${mvc.dead}`;
+
+            marker.bindTooltip(tooltipText);
             this.mvcPointsLayer.addLayer(marker);
             this.markers.push(marker);
         });
@@ -140,7 +147,6 @@ export default class Map extends Component {
             this.map.removeLayer(this.heatmapLayer);
             this.map.addLayer(this.mvcPointsLayer);
             this.isPointsLayerShown = true;
-            this.updateMarkerVisibility();
         }
     }
 
@@ -159,6 +165,7 @@ export default class Map extends Component {
             fillOpacity: 1,
             radius,
             mvc,
+            renderer: this.canvasRenderer
         };
 
         if (mvcHasDeadParticipants(mvc)) {
@@ -214,8 +221,6 @@ export default class Map extends Component {
         map.on('resize moveend zoomend', this.handleMapChanges);
         map.on('zoomend', this.handleZoomEnd);
 
-        map.on('resize moveend zoomend', this.updateMarkerVisibility);
-
         this.map = map;
 
         if (this.props.onMapReady) {
@@ -223,35 +228,6 @@ export default class Map extends Component {
         }
     }
 
-    updateMarkerVisibility() {
-        if (!this.isPointsLayerShown) {
-            return;
-        }
-
-        const mapBounds = this.map.getBounds();
-        const expandedBounds = mapBounds.pad(0.7);
-
-        this.markers.forEach((marker) => {
-            var isVisible = expandedBounds.contains(marker.getLatLng()),
-                wasVisible = marker._wasVisible,
-                path = marker._path,
-                pathParent = marker._pathParent;
-
-            if (!pathParent) {
-                pathParent = marker._pathParent = path.parentNode;
-            }
-
-            if (isVisible != wasVisible) {
-                if (isVisible) {
-                    pathParent.appendChild(path);
-                } else {
-                    pathParent.removeChild(path);
-                }
-
-                marker._wasVisible = isVisible;
-            }
-        });
-    }
 
     getZoomByRegionLevel(regionLevel) {
         if (regionLevel >= 2) {

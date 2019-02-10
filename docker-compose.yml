@@ -1,0 +1,33 @@
+version: "3"
+services:
+  db:
+    image: postgres:11-alpine
+    restart: always
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/backup:/backup
+      - ./docker/db/init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: api_app
+    env_file: docker/.dockerenv
+    restart: always
+    volumes:
+      - ./:/app
+    links:
+      - db
+    ports:
+      - "8000:8000"
+    command: ["make", "app"]
+
+  node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    restart: always
+    volumes:
+        - ./:/app
+    command: sh -c "npm install && npm start"
