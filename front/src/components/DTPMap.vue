@@ -32,6 +32,7 @@ export default {
   },
   data() {
     return {
+      points: [],
       zoom: 10,
       maxZoom: 15,
       maxValue: 1,

@@ -15,29 +15,42 @@ from dtpmapapp.models import (
 
 
 class MVCSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="participant_type")
+    color = serializers.SerializerMethodField()
+
     class Meta:
         model = MVC
         fields = (
             "id",
-            "region",
-            "alias",
+            "name",
+            "color",
+            # "region",
+            # "alias",
             "datetime",
-            "address",
-            "street",
-            "type",
+            # "address",
+            # "street",
+            # "type",
             "participant_type",
-            "longitude",
-            "latitude",
-            "conditions",
-            "dead",
-            "injured",
-            "participants",
-            "scheme",
-            "nearby",
-            "source_data",
-            "geo_updated",
-            "created_at",
+            "lng",
+            "lat",
+            # "conditions",
+            # "dead",
+            # "injured",
+            # "participants",
+            # "scheme",
+            # "nearby",
+            # "source_data",
+            # "geo_updated",
+            # "created_at",
         )
+
+    def get_color(self, obj):
+        if obj.participant_type.name == "auto":
+            return "#FFCA68"
+        elif obj.participant_type.name == "bicycle":
+            return "#97CA98"
+        elif obj.participant_type.name == "pedestrian":
+            return "#96CBFE"
 
 
 class CarSerializer(serializers.ModelSerializer):
