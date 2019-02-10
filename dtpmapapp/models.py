@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-
 class Region(models.Model):
     name = models.CharField(max_length=1000, help_text="Region name", null=True, blank=True, default=None, db_index=True)
     alias= models.CharField(max_length=1000, help_text="Region alias", null=True, blank=True, default=None, db_index=True)
@@ -20,12 +19,6 @@ class Region(models.Model):
             return '/' + self.parent_region.alias + '_' + self.alias + '/'
         else:
             return '/' + self.alias + '/'
-
-
-class UpdateLog(models.Model):
-    term = models.DateField(help_text="Update term", db_index=True)
-    last_update = models.DateField(help_text="Update date", db_index=True)
-    area = models.ForeignKey(Region, help_text="Region/area", db_index=True, on_delete=models.CASCADE)
 
 
 class Street(models.Model):
@@ -66,7 +59,6 @@ class MVCParticipantType(models.Model):
         return self.name
 
 
-
 class Nearby(models.Model):
     name = models.CharField(max_length=1000, help_text="Nearby object name", null=True, blank=True, default=None, db_index=True)
 
@@ -90,8 +82,7 @@ class MVC(models.Model):
     participants = models.IntegerField(help_text="MVC participants count", null=True, blank=True, default=None, db_index=True)
     scheme = models.CharField(max_length=100, help_text="MVC scheme number", null=True, blank=True, default=None, db_index=True)
     nearby = models.ManyToManyField(Nearby, help_text="Nearby objects", db_index=True)
-    source_data = JSONField(help_text="Source data", null=True, blank=True, default=None)
-    geo_updated = models.BooleanField(help_text="Geo updated", default=False)
+    geo_updated = models.BooleanField(help_text="Geo updated", default=None, null=True)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -99,6 +90,13 @@ class MVC(models.Model):
 
     def get_absolute_url(self):
         return '/dtp/' + self.alias + '/'
+
+
+class SourceData(models.Model):
+    data = JSONField(help_text="Source data", default=dict)
+    date = models.DateTimeField(auto_now=True)
+    mvc = models.ForeignKey(MVC, help_text="Source data mvc", on_delete=models.CASCADE)
+
 
 class Participant(models.Model):
     role = models.CharField(max_length=1000, help_text="Participant role", null=True, blank=True, default=None, db_index=True)

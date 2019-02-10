@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-from dtp_parser import update_regions
-from dtp_parser import update_dtp
-
 import sys
 import os
 import warnings
@@ -26,6 +23,13 @@ from dtpmapapp import models
 from django.shortcuts import get_object_or_404
 
 
+from scrapy.crawler import CrawlerProcess
+from scrapy.settings import Settings
+from dtp_parser2.dtpparser.spiders.region_spider import RegionSpider
+from dtp_parser2.dtpparser.spiders.dtp_spider import DtpSpider
+from dtp_parser2 import update_dtp
+
+
 def open_csv(link):
     with open(link, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
@@ -36,23 +40,73 @@ def open_csv(link):
 
 def get_tech_data():
     for participant_type in open_csv("data/participant_types.csv"):
-        try:
-            get_object_or_404(models.MVCParticipantType,name=participant_type[0])
-            continue
-        except:
-            participant_type_item = models.MVCParticipantType(
-                name=participant_type[0],
-                label=participant_type[1]
-            )
-            participant_type_item.save()
+        participant_type_item, created = models.MVCParticipantType.objects.get_or_create(
+            name=participant_type[0]
+        )
+        if created:
+            participant_type_item.label = participant_type[1]
+
+        participant_type_item.value = True if participant_type[2] == "true" else False
+        participant_type_item.save()
 
 
-def get_regions():
-    update_regions.main()
+def download_regions():
+    print("lol")
+    if os.path.exists("data/regions.json"):
+        os.remove("data/regions.json")
+
+    settings = Settings()
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'dtp_parser2.dtpparser.settings'
+    settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
+    settings.setmodule(settings_module_path, priority='project')
+    process = CrawlerProcess(settings)
+
+    process.crawl(RegionSpider)
+    process.start()
 
 
-def get_data():
+def get_regions_from_file():
+    models.Region.objects.all().delete()
+    regions_data = open_csv("data/regions.csv")
+
+    for region in regions_data:
+        region_item, created = models.Region.objects.get_or_create(
+            oktmo_code=region[1], level=region[3]
+        )
+
+        if created:
+            region_item.name = region[0]
+
+        region_item.alias = region[2]
+        region_item.latitude = region[5]
+        region_item.longitude = region[6]
+        region_item.status = True if region[4] == "TRUE" else False
+
+        if region[7]:
+            region_item.parent_region = get_object_or_404(models.Region, oktmo_code=region[8],level=1)
+
+        region_item.save()
+
+
+def download_dtp():
+    if os.path.exists("data/dtp.json"):
+        os.remove("data/dtp.json")
+    settings = Settings()
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'dtp_parser2.dtpparser.settings'
+    settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
+    settings.setmodule(settings_module_path, priority='project')
+    process = CrawlerProcess(settings)
+
+    process.crawl(DtpSpider)
+    process.start()
+
+
+def get_dtp():
     update_dtp.main()
+
+
+def geocode_dtp():
+    pass
 
 
 def load(data):
@@ -60,15 +114,23 @@ def load(data):
         for item in data:
             if item == "tech_data":
                 get_tech_data()
-            elif item == "regions":
-                get_regions()
-            elif item == "data":
-                get_data()
+            elif item == "download_regions":
+                download_regions()
+            elif item == "get_regions":
+                get_regions_from_file()
+            elif item == "download_dtp":
+                download_dtp()
+            elif item == "get_dtp":
+                get_dtp()
+            elif item == "geocode_dtp":
+                geocode_dtp()
     else:
         get_tech_data()
-        get_regions()
-        get_data()
-
+        #download_regions()
+        get_regions_from_file()
+        #download_dtp()
+        get_dtp()
+        #geocode_dtp()
 
 def main(args):
     load(args[1:])
@@ -76,3 +138,4 @@ def main(args):
 
 if __name__ == "__main__":
     main(sys.argv)
+

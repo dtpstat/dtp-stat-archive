@@ -19,7 +19,6 @@ def about(request):
     return render(request, 'about.html')
 
 
-
 def region(request, region_alias):
     if "_" in region_alias:
         region_alias, area_alias = region_alias.split("_")
@@ -30,7 +29,7 @@ def region(request, region_alias):
 
     user_agent = user_agents.parse(request.META['HTTP_USER_AGENT'])
 
-    if region_item.status:
+    if region_item.status or region_item.parent_region.status:
         return render(request, 'area.html', context={
             "region": region_item,
             "region_alias": region_alias,
