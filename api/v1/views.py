@@ -16,6 +16,7 @@ from dtpmapapp.models import (
     UpdateLog,
 )
 
+from .filters import MVCFilter
 from .serializers import (
     CarSerializer,
     MVCParticipantTypeSerializer,
@@ -32,6 +33,7 @@ from .serializers import (
 class MVCViewSet(viewsets.ModelViewSet):
     queryset = MVC.objects.select_related("participant_type").all()
     serializer_class = MVCSerializer
+    filterset_class = MVCFilter
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
