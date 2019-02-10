@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import HeatmapOverlay from 'leaflet-heatmap';
-import { getColorByParticipantTypeId, mvcHasDeadParticipants} from '../services/mvcs';
+import {getColorByParticipantTypeId, getMvcTypeName, mvcHasDeadParticipants} from '../services/mvcs';
 
 const MAP_ID = 'dtp-map';
-const markerMinRadius = 3;
-const markerMaxRadius = 10;
+const markerMinRadius = 5;
+const markerMaxRadius = 15;
 
 const heatmapConfig = {
     scaleRadius: true,
@@ -102,6 +102,11 @@ export default class Map extends Component {
         this.markers = [];
         mvcs.forEach(mvc => {
             let marker = new L.circleMarker([mvc.latitude, mvc.longitude], this.getMarkerOptions(mvc));
+            const date = moment(mvc.datetime);
+            const actionName = getMvcTypeName(mvc, this.props.dictionaries);
+            const tooltipText = `${date.format('DD.MM.YYYY HH:mm')}<br/>${actionName}<br/>Пострадали - ${mvc.injured}, погибли - ${mvc.dead}`;
+
+            marker.bindTooltip(tooltipText);
             this.mvcPointsLayer.addLayer(marker);
             this.markers.push(marker);
         });
