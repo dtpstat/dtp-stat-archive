@@ -1,7 +1,8 @@
 <template>
   <div class="map-section collapse show flex-grow-1" data-parent=".map-with-stats">
     {{showHeatMap}}
-    {{currentZoom}}
+    {{zoom}}
+    {{currentCenter}}
     <div id="map" style="height: 765px; position: relative;"></div>
   </div>
 </template>
@@ -15,8 +16,8 @@ const mapUrl =
 
 const heatmapConfig = {
   scaleRadius: true,
-  radius: 20,
-  minOpacity: 0.1,
+  radius: 10,
+  minOpacity: 0.25,
   max_val: 1,
   gradient: { 0: "white", 0.25: "yellow", 0.5: "orange", 1: "red" }
 };
@@ -28,11 +29,13 @@ export default {
     handleZoomChange: Function,
     handleMounted: Function,
     points: Array,
-    center: Array
+    center: {
+      type: Object,
+      default: L.latLng(54.19, 45.18)
+    }
   },
   data() {
     return {
-      points: [],
       zoom: 10,
       maxZoom: 15,
       maxValue: 1,
@@ -55,7 +58,7 @@ export default {
       renderer: this.$refs.canvas,
       attribution: this.attribution
     });
-    this.$refs.map.setView(this.currentCenter, 12);
+    this.$refs.map.setView(this.center, 3);
 
     this.$refs.tileLayer = L.tileLayer(mapUrl, { id: "map" });
     this.$refs.map.addLayer(this.$refs.tileLayer);
@@ -65,22 +68,23 @@ export default {
 
     this.$refs.mvcPointsLayer = new L.FeatureGroup();
 
-    var promise = new Promise((resolve, reject) => {
-      this.handleMounted(this.zoom, this.$refs.map.getBounds());
-    });
-    promise.then();
+    this.handleMounted(this.zoom, this.$refs.map.getBounds());
   },
   computed: {
     showHeatMap() {
-      return this.currentZoom < this.maxZoom ? true : false;
+      return this.zoom < this.maxZoom ? true : false;
     }
   },
   watch: {
     points(val) {
       console.log("Points updated");
       this.drawPoints();
+    },
+    center(val) {
+      this.$refs.map.setView(val, 12);
     }
   },
+
   methods: {
     drawPoints() {
       console.log("Draw points");
@@ -112,14 +116,15 @@ export default {
     handleZoomEnd() {
       console.log("Handle zoom end");
 
-      let bounds = this.$refs.map.getBounds();
-      this.currentZoom = this.$refs.map.getZoom();
+      this.bounds = this.$refs.map.getBounds();
+      this.zoom = this.$refs.map.getZoom();
+      this.currentCenter = this.$refs.map.getCenter();
 
       let _params = {
-        ne_lat: bounds._northEast.lat,
-        ne_lng: bounds._northEast.lng,
-        sw_lat: bounds._southWest.lat,
-        sw_lng: bounds._southWest.lng
+        ne_lat: this.bounds._northEast.lat,
+        ne_lng: this.bounds._northEast.lng,
+        sw_lat: this.bounds._southWest.lat,
+        sw_lng: this.bounds._southWest.lng
       };
 
       let params = { ...this.$route.query, ..._params };

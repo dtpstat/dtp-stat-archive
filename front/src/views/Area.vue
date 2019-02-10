@@ -5,7 +5,7 @@
         <div class="col-sm left-column">
           <div class="map-with-stats d-flex flex-column">
             <dtp-map
-              :center="defaultCenter"
+              :center="center"
               :points="points"
               :handleMounted="updateData"
               :handleZoomChange="updateData"
@@ -43,10 +43,10 @@ export default {
   name: "dtp-area",
   data() {
     return {
-      defaultCenter: [54.196994, 45.411987],
       points: [],
       region: null,
       parent_region: null,
+      center: L.latLng(54.19, 45.18),
       brief: {
         dead: 1,
         deadAuto: 1,
