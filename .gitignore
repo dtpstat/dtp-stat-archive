@@ -118,3 +118,4 @@ webpack-stats.json
 static/bundles/
 
 .dockerenv
+static/
