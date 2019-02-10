@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.urls import path
+from django.http import HttpResponse
 from django.contrib import admin
+
+from dtpmap import settings
 from dtpmapapp import views
 from django.contrib.sitemaps import views as sitemapviews
 from django.views.decorators.cache import cache_page
@@ -25,7 +27,6 @@ sitemaps = {
     'mvcs': MVCSitemap(),
     'regions': RegionSitemap()
 }
-
 
 urlpatterns = [
 
@@ -39,7 +40,8 @@ urlpatterns = [
     url(r'^admin1/', admin.site.urls),
     url(r'^about/', views.about, name='about'),
     url(r'^api/regions/(?P<region_alias>[-_\w]+)/mvcs/$', views.mvcs_by_region, name='mvc by region'),
-    url(r'^api/regions/(?P<region_alias>[-_\w]+)/areas/(?P<area_alias>[-_\w]+)/mvcs/$', views.mvcs_by_area, name='mvc by area'),
+    url(r'^api/regions/(?P<region_alias>[-_\w]+)/areas/(?P<area_alias>[-_\w]+)/mvcs/$', views.mvcs_by_area,
+        name='mvc by area'),
     url(r'^api/dicts/$', views.dicts, name='dictionaries'),
     url(r'^api/participant_types/$', views.participant_types, name='participant_types'),
     url(r'^api/search_region/$', views.search_region, name='search region'),
@@ -47,3 +49,11 @@ urlpatterns = [
     url(r'^(?P<region_alias>[-_\w]+)/$', views.region, name='region page'),
     url(r'^dtp/(?P<mvc_alias>[-_\w]+)/$', views.mvc, name='mvc page'),
 ]
+
+
+def robots_file(x):
+    return HttpResponse("User-Agent: *\nDisallow:", content_type="text/plain")
+
+
+if settings.DEBUG:
+    urlpatterns.append(url(r'^robots.txt', robots_file, name="robots_file"))
