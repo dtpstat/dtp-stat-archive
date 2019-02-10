@@ -1,5 +1,5 @@
 DJANGO_SETTINGS_MODULE=dtpmap.settings
 C_FORCE_ROOT=true
 SECRET_KEY=<You secret key!>
-DATABASE=postgres://django:django@db:5432/django
+DATABASE_URL=postgres://django:django@db:5432/django
 DEBUG=false
