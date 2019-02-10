@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
+import LocationMarker from 'leaflet.locatecontrol'
 import HeatmapOverlay from 'leaflet-heatmap';
 import {getColorByParticipantTypeId, getMvcTypeName, mvcHasDeadParticipants} from '../services/mvcs';
 
@@ -220,6 +221,7 @@ export default class Map extends Component {
         map.addLayer(osm);
         map.on('resize moveend zoomend', this.handleMapChanges);
         map.on('zoomend', this.handleZoomEnd);
+        L.control.locate().addTo(map);
 
         this.map = map;
 
