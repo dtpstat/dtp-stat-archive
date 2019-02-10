@@ -19,6 +19,8 @@ env = environ.Env(
     SECRET_KEY=(str, ''),
 )
 
+environ.Env.read_env() # reading .env file
+
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
@@ -80,7 +82,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dtpmap.wsgi.application'
 
 DATABASES = {
-    'default': env.db(default='postgres://django:django@db:5432/django'),
+    'default': env.db(default='postgres://django:django@localhost:5432/django'),
 }
 
 # Password validation

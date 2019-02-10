@@ -126,3 +126,21 @@ $ ./parser.py data
 ```bash
 $ npm run build-production
 ```
+
+
+### Старт без Docker и изменения переменных окружения
+
+Если не хочется выкачивать все данные - вот бекап базы https://drive.google.com/open?id=1SPHyY-802U-USRQh3j4JfzhIO86eAaUp
+###Backend:
+    
+- Скопировать `dtpmap/.env.tmpl -> dtpmap/.env`
+- Отредактировать `dtpmap/.env`
+
+###Frontend:
+
+(самый простой способ)
+- Ставите Node.js https://nodejs.org/en/
+- Ставите yarn https://yarnpkg.com/en/docs/install
+- В корне проекта выполняете `yarn` и затем `yarn start`
+
+Выполнить `manage.py runserver 8000`
