@@ -22,3 +22,15 @@ services:
     ports:
       - "8000:8000"
     command: ["make", "app"]
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.front
+    image: api_web    
+    volumes:
+      - ./front:/app
+    ports:
+      - "8080:8080"
+    links:
+      - app
+    command: yarn serve

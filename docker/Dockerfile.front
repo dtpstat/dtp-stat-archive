@@ -1,0 +1,12 @@
+FROM node:slim
+
+RUN yarn global add @vue/cli
+
+RUN mkdir /app
+COPY ./front/package.json /app/
+
+WORKDIR /app
+
+RUN yarn
+
+EXPOSE 8000
