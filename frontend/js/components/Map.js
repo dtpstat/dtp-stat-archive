@@ -29,6 +29,8 @@ export default class Map extends Component {
         this.setRef = this.setRef.bind(this);
         this.handleLayerClick = this.handleLayerClick.bind(this);
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
+        this.handleMapChanges = this.handleMapChanges.bind(this);
+
 
         this.state = {
             markers: []
@@ -187,6 +189,17 @@ export default class Map extends Component {
         this.setLayerBasedOnZoom(this.props.mvcs);
     }
 
+    handleMapChanges(event){
+        if (this.props.onMapChanges) {
+            const zoom = this.map.getZoom()
+            const center = this.map.getCenter()
+            this.props.onMapChanges({
+                zoom: zoom,
+                center: center
+            });
+        }
+    }
+
     initLeaflet() {
         const map = L.map(MAP_ID);
         const osmUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png';
@@ -195,12 +208,17 @@ export default class Map extends Component {
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
             }
         );
-
-        let { latitude, longitude } = this.props.defaultCoord;
-        const zoom = this.getZoomByRegionLevel(this.props.regionLevel);
-        map.setView(new L.LatLng(latitude, longitude), zoom);
+        const {lat, lng, zoom} = this.props.searchParams;
+        if (lat && lng && zoom){
+            map.setView(new L.LatLng(lat, lng), zoom);
+        }
+        else {
+            let {latitude, longitude} = this.props.defaultCoord;
+            const zoom = this.getZoomByRegionLevel(this.props.regionLevel);
+            map.setView(new L.LatLng(latitude, longitude), zoom);
+        }
         map.addLayer(osm);
-
+        map.on('resize moveend zoomend', this.handleMapChanges);
         map.on('zoomend', this.handleZoomEnd);
 
         this.map = map;
@@ -235,9 +253,11 @@ export default class Map extends Component {
 
 Map.propTypes = {
     defaultCoord: PropTypes.object,
+    searchParams: PropTypes.object,
     dictionaries: PropTypes.object,
     mvcs: PropTypes.array,
     onMapReady: PropTypes.func,
     onMvcSelected: PropTypes.func,
+    onMapChanges: PropTypes.func,
     regionLevel: PropTypes.number,
 };

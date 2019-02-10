@@ -10,6 +10,8 @@ import { getStreetsFromMvcs, filterMvcs, getMinMaxDates, visibleByParticipantNam
 import { dictionariesToHashMaps, sortDictionaries } from '../services/dictionaries';
 import { calcInjuredAndDeadCounts, calcCountsByMvcTypes, calcCountsByOffences } from '../services/stats';
 import { calcRangesForDatePicker, getYearRange } from '../services/dates';
+import Router from "../services/router";
+import createHistory from 'history/createBrowserHistory'
 
 export default class App extends PureComponent {
     constructor(props) {
@@ -23,7 +25,7 @@ export default class App extends PureComponent {
         this.handleParticipantTypeChange = this.handleParticipantTypeChange.bind(this);
         this.handleOnlyDeadChange = this.handleOnlyDeadChange.bind(this);
         this.handleMvcSelected = this.handleMvcSelected.bind(this);
-        this.handleMvcSelected = this.handleMvcSelected.bind(this);
+        this.handleMapChanges = this.handleMapChanges.bind(this);
         this.handleMarkers = this.handleMarkers.bind(this);
         this.handleCloseMvc = this.handleCloseMvc.bind(this);
         this.handleShowMap = this.handleShowMap.bind(this);
@@ -31,6 +33,9 @@ export default class App extends PureComponent {
         this.handleToggleStats = this.handleToggleStats.bind(this);
 
         const [fromDate, toDate] = getYearRange();
+        this.router = new Router(createHistory({}))
+        this.searchParams = this.router.get_params()
+        console.log(this.searchParams)
 
         this.state = {
             mvcs: null,
@@ -63,6 +68,7 @@ export default class App extends PureComponent {
             },
             stats: {},
             showStats: false,
+            searchParams: this.router.get_params(),
         };
     }
     
@@ -178,6 +184,10 @@ export default class App extends PureComponent {
         this.setState({ selectedMvc: mvc, showMvcDetails: true });
     }
 
+    handleMapChanges(mapParam) {
+        this.router.set_params(mapParam, true)
+    }
+
     handleCloseMvc() {
         this.setState({ showMvcDetails: false });
     }
@@ -213,10 +223,12 @@ export default class App extends PureComponent {
                         <MapWithStats
                             cityName={this.props.cityName}
                             defaultCoord={{ latitude: this.props.regionLat, longitude: this.props.regionLon }}
+                            searchParams={this.state.searchParams}
                             dictionaries={this.state.dictionariesAsHashMaps}
                             mvcs={this.state.filteredMvcs || this.state.mvcs}
                             mapObjectsMarkersData={this.state.mapObjectsMarkersData}
                             onMvcSelected={this.handleMvcSelected}
+                            onMapChanges={this.handleMapChanges}
                             onToggleStats={this.handleToggleStats}
                             regionLevel={this.props.regionLevel}
                             showStats={this.state.showStats}
