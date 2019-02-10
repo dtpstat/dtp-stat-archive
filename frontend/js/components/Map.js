@@ -29,7 +29,6 @@ export default class Map extends Component {
         this.setRef = this.setRef.bind(this);
         this.handleLayerClick = this.handleLayerClick.bind(this);
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
-        this.updateMarkerVisibility = this.updateMarkerVisibility.bind(this);
 
         this.state = {
             markers: []
@@ -100,6 +99,7 @@ export default class Map extends Component {
     createMvcPointsLayer(mvcs) {
         this.mvcPointsLayer = new L.FeatureGroup();
         this.markers = [];
+        this.canvasRenderer = L.canvas({ padding: 0.5 });
         mvcs.forEach(mvc => {
             let marker = new L.circleMarker([mvc.latitude, mvc.longitude], this.getMarkerOptions(mvc));
             const date = moment(mvc.datetime);
@@ -145,7 +145,6 @@ export default class Map extends Component {
             this.map.removeLayer(this.heatmapLayer);
             this.map.addLayer(this.mvcPointsLayer);
             this.isPointsLayerShown = true;
-            this.updateMarkerVisibility();
         }
     }
 
@@ -164,6 +163,7 @@ export default class Map extends Component {
             fillOpacity: 1,
             radius,
             mvc,
+            renderer: this.canvasRenderer
         };
 
         if (mvcHasDeadParticipants(mvc)) {
@@ -203,8 +203,6 @@ export default class Map extends Component {
 
         map.on('zoomend', this.handleZoomEnd);
 
-        map.on('resize moveend zoomend', this.updateMarkerVisibility);
-
         this.map = map;
 
         if (this.props.onMapReady) {
@@ -212,35 +210,6 @@ export default class Map extends Component {
         }
     }
 
-    updateMarkerVisibility() {
-        if (!this.isPointsLayerShown) {
-            return;
-        }
-
-        const mapBounds = this.map.getBounds();
-        const expandedBounds = mapBounds.pad(0.7);
-
-        this.markers.forEach((marker) => {
-            var isVisible = expandedBounds.contains(marker.getLatLng()),
-                wasVisible = marker._wasVisible,
-                path = marker._path,
-                pathParent = marker._pathParent;
-
-            if (!pathParent) {
-                pathParent = marker._pathParent = path.parentNode;
-            }
-
-            if (isVisible != wasVisible) {
-                if (isVisible) {
-                    pathParent.appendChild(path);
-                } else {
-                    pathParent.removeChild(path);
-                }
-
-                marker._wasVisible = isVisible;
-            }
-        });
-    }
 
     getZoomByRegionLevel(regionLevel) {
         if (regionLevel >= 2) {
