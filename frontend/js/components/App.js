@@ -102,7 +102,7 @@ export default class App extends PureComponent {
     processLoadedMvcs() {
         let streetsFromMvcs = getStreetsFromMvcs(this.state.mvcs, this.state.dictionariesAsHashMaps.streets);
         let { minDate, maxDate } = getMinMaxDates(this.state.mvcs);
-        let dateRanges = calcRangesForDatePicker(minDate);
+        let dateRanges = calcRangesForDatePicker(minDate, maxDate);
         let filteredMvcs = filterMvcs(this.state.mvcs, this.state.filters);
         let stats = this.calcStats(filteredMvcs);
         this.setState({
