@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load md5url %}
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
     (function (d, w, c) {
@@ -57,7 +58,7 @@
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
           crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% md5url 'css/style.css' %}" rel="stylesheet" type="text/css">
 
 
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,900&amp;subset=cyrillic,cyrillic-ext" rel="stylesheet">
