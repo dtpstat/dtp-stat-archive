@@ -16,7 +16,7 @@
           <router-link :to="{ name: 'Area' }">Все города</router-link>
         </p>
         <p class="item">
-          <a href="/area?region_name=москва">Москва</a>
+          <a href="/area?parent_region_name=москва">Москва</a>
         </p>
         <p>
           <a href="/sankt-peterburg/">Санкт-Петербург</a>
