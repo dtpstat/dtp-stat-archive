@@ -37,9 +37,12 @@ class MVCViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
-            self.get_queryset().only("id", "datetime", "participant_type", "lng", "lat")
+            self.get_queryset()
+            .only("id", "datetime", "participant_type", "lng", "lat")
+            .values("id", "datetime", "participant_type", "lng", "lat")
         )
-        serializer = self.get_serializer(queryset, many=True)
+
+        # serializer = self.get_serializer(queryset, many=True)
         aggregate = queryset.aggregate(
             dead=Sum("dead"),
             dead_auto=Sum("dead", filter=Q(participant_type__name="auto")),
@@ -55,7 +58,7 @@ class MVCViewSet(viewsets.ModelViewSet):
 
         data = {
             "count": queryset.count(),
-            "result": serializer.data,
+            "result": queryset,
             "dead": aggregate["dead"],
             "deadAuto": aggregate["dead_auto"],
             "deadBicycle": aggregate["dead_bicycle"],
