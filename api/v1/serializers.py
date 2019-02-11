@@ -1,3 +1,4 @@
+from django.db import models
 from rest_framework import serializers
 
 from dtpmapapp.models import (
@@ -119,3 +120,34 @@ class StreetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Street
         fields = ("id", "name")
+
+
+def model_to_dict(inst, nested=[]):
+    if inst is None:
+        return None
+    if not isinstance(inst, models.Model):
+        ret = []
+        for i in inst.all():
+            ret.append(model_to_dict(i, nested))
+        return ret
+    else:
+        obj = {}
+        for key, val in inst.__dict__.items():
+            if not key.startswith("_"):
+                obj[key] = val
+        if isinstance(nested, dict):
+            for n, v in nested.items():
+                obj[n] = model_to_dict(getattr(inst, n), v)
+        else:
+            for n in nested:
+                obj[n] = model_to_dict(getattr(inst, n))
+        return obj
+
+
+class HackSerializer:
+    nested = []
+
+    def __init__(self, instance=None, context=None, **kwargs):
+        self.data = []
+        for i in instance:
+            self.data.append(model_to_dict(i, self.nested))
