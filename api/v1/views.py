@@ -27,20 +27,19 @@ from .serializers import (
     ParticipantSerializer,
     RegionSerializer,
     StreetSerializer,
-    HackSerializer,
 )
 
 
 class MVCViewSet(viewsets.ModelViewSet):
     queryset = MVC.objects.select_related("participant_type").all()
-    serializer_class = HackSerializer
+    serializer_class = MVCSerializer
     filterset_class = MVCFilter
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
             self.get_queryset().only("id", "datetime", "participant_type", "lng", "lat")
         )
-        serializer = self.get_serializer(instance=queryset, many=True)
+        serializer = self.get_serializer(queryset, many=True)
         aggregate = queryset.aggregate(
             dead=Sum("dead"),
             dead_auto=Sum("dead", filter=Q(participant_type__name="auto")),
