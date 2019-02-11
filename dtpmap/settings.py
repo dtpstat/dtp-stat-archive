@@ -28,6 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INTERNAL_IPS = ['127.0.0.1']
 FIRST_DAY_OF_WEEK = 1
 
+FLAMES_DIR = os.path.join(BASE_DIR, 'flames')
 
 # Application definition
 
@@ -43,8 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'webpack_loader',
-    'drf_yasg',
-    'silk',
+    'drf_yasg',    
     'django.contrib.sitemaps',
     'django.contrib.sites',
 ]
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
+    'dtpmapapp.middlewares.FlamesMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

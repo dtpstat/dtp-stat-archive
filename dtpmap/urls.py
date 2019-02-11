@@ -51,7 +51,6 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("api/v1/", include(("api.v1.urls", "api_v1"))),
     path("api/", include((old_api_patterns, "old_api_patterns"))),
-    path('silk/', include('silk.urls', namespace='silk')),
     path("", views.home, name="home"),
     re_path(r"^(?P<region_alias>[-_\w]+)/$", views.region, name="region page"),
     re_path(r"^dtp/(?P<mvc_alias>[-_\w]+)/$", views.mvc, name="mvc page"),
