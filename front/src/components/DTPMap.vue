@@ -1,8 +1,5 @@
 <template>
   <div class="map-section collapse show flex-grow-1" data-parent=".map-with-stats">
-    {{showHeatMap}}
-    {{zoom}}
-    {{currentCenter}}
     <div id="map" style="height: 765px; position: relative;"></div>
   </div>
 </template>
@@ -27,6 +24,7 @@ export default {
 
   props: {
     handleZoomChange: Function,
+    handleZoomStart: Function,
     handleMounted: Function,
     points: Array,
     center: {
@@ -64,6 +62,7 @@ export default {
     this.$refs.map.addLayer(this.$refs.tileLayer);
 
     this.$refs.map.on("zoomend", this.handleZoomEnd);
+    this.$refs.map.on("zoomstart", this.handleZoomStart);
     // this.$refs.map.on("resize moveend zoomend", this.handleZoomEnd);
 
     this.$refs.mvcPointsLayer = new L.FeatureGroup();
@@ -76,7 +75,7 @@ export default {
     }
   },
   watch: {
-    points(val) {
+    points() {
       console.log("Points updated");
       this.drawPoints();
     },

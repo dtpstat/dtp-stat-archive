@@ -9,6 +9,7 @@
               :points="points"
               :handleMounted="updateData"
               :handleZoomChange="updateData"
+              :handleZoomStart="cancelRequest"
             ></dtp-map>
             <dtp-brief-stats
               :dead="brief.dead"
@@ -35,6 +36,7 @@
 
 <script>
 import axios from "axios";
+import L from "leaflet";
 import DTPMap from "@/components/DTPMap";
 import DTPBriefStats from "@/components/DTPBriefStats";
 import DTPExtraStats from "@/components/DTPExtraStats";
@@ -43,6 +45,8 @@ export default {
   name: "dtp-area",
   data() {
     return {
+      cancel: null,
+      requestStarted: false,
       points: [],
       region: null,
       parent_region: null,
@@ -74,16 +78,21 @@ export default {
       console.log("Update points");
       this.points = points;
     },
+    cancelRequest() {
+      if (this.requestStarted) {
+        this.requestStarted = false;
+        this.cancel("Operation canceled by the user.");
+      }
+    },
     updateData() {
       console.log("Update data");
-      // console.log(this.$route.query);
       if (
-        ((!("region" in this.$route.query) &
+        (!("region" in this.$route.query) &
           !("region_name" in this.$route.query) &
           !("parent_region" in this.$route.query) &
-          !("parent_region_name" in this.$route.query))|
+          !("parent_region_name" in this.$route.query)) |
           (("region" in this.$route.query) &
-            (this.$route.query.region != this.region))) |
+          (this.$route.query.region != this.region)) |
         (("region_name" in this.$route.query) &
           (this.$route.query.region_name != this.region_name)) |
         (("parent_region" in this.$route.query) &
@@ -91,11 +100,17 @@ export default {
         (("parent_region_name" in this.$route.query) &
           (this.$route.query.parent_region_name != this.parent_region_name))
       ) {
+        this.requestStarted = true;
+        let self = this;
         axios
           .get("http://localhost:8000/api/v1/mvc/", {
-            params: this.$route.query
+            params: this.$route.query,
+            cancelToken: new axios.CancelToken(function executor(c) {
+              self.cancel = c;
+            })
           })
           .then(response => {
+            this.requestStarted = false;
             this.region = this.$route.query.region;
             this.parent_region = this.$route.query.parent_region;
             this.region_name = this.$route.query.region_name;
