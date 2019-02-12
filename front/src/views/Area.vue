@@ -41,6 +41,7 @@ import DTPMap from "@/components/DTPMap";
 import DTPBriefStats from "@/components/DTPBriefStats";
 import DTPExtraStats from "@/components/DTPExtraStats";
 import DTPPanelOverlay from "@/components/DTPPanelOverlay";
+import DTPMvcDetail from "@/components/DTPMvcDetail";
 export default {
   name: "dtp-area",
   data() {
@@ -71,7 +72,8 @@ export default {
     "dtp-map": DTPMap,
     "dtp-brief-stats": DTPBriefStats,
     "dtp-extra-stats": DTPExtraStats,
-    "dtp-panel-overlay": DTPPanelOverlay
+    "dtp-panel-overlay": DTPPanelOverlay,
+    "dtp-mvc-detail": DTPMvcDetail
   },
   methods: {
     updatePoints(points) {
@@ -91,7 +93,7 @@ export default {
           !("region_name" in this.$route.query) &
           !("parent_region" in this.$route.query) &
           !("parent_region_name" in this.$route.query)) |
-          (("region" in this.$route.query) &
+        (("region" in this.$route.query) &
           (this.$route.query.region != this.region)) |
         (("region_name" in this.$route.query) &
           (this.$route.query.region_name != this.region_name)) |
@@ -116,6 +118,7 @@ export default {
             this.region_name = this.$route.query.region_name;
             this.parent_region_name = this.$route.query.parent_region_name;
             this.updatePoints(response.data.result);
+            this.center = response.data.center;
             this.brief.mvcCount = response.data.count;
             this.brief.injured = response.data.injured;
             this.brief.injuredAuto = response.data.injuredAuto;
