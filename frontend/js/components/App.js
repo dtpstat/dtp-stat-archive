@@ -206,9 +206,8 @@ export default class App extends PureComponent {
             fromDate: moment(this.state.filters.fromDate).format("YYYY.MM.DD"),
             toDate: moment(this.state.filters.toDate).format("YYYY.MM.DD"),
              });
-        this.router.set_params(friendlyUrlFilters, false)
 
-        this.router.set_params(mapParam, true)
+        this.router.set_params(friendlyUrlFilters, true)
     }
 
     handleCloseMvc() {
