@@ -61,7 +61,7 @@ export default {
     this.$refs.tileLayer = L.tileLayer(mapUrl, { id: "map" });
     this.$refs.map.addLayer(this.$refs.tileLayer);
 
-    this.$refs.map.on("zoomend", this.handleZoomEnd);
+    this.$refs.map.on("zoomend moveend", this.handleZoomEnd);
     this.$refs.map.on("zoomstart", this.handleZoomStart);
     // this.$refs.map.on("resize moveend zoomend", this.handleZoomEnd);
 
@@ -80,23 +80,32 @@ export default {
       this.drawPoints();
     },
     center(val) {
-      this.$refs.map.setView(val, 12);
+      if (
+        val != null &&
+        (val.lat != this.currentCenter.lat || val.lng != this.currentCenter.lng)
+      ) {
+        this.$refs.map.setView(val, 12);
+      }
+      this.currentCenter = val;
     }
   },
 
   methods: {
     drawPoints() {
       console.log("Draw points");
+      console.log(`Count points: ${this.points.length}`);
 
       if (this.$refs.mvcPointsLayer) {
+        console.log("Draw points::Clear layers");
         this.$refs.mvcPointsLayer.clearLayers();
       }
       if (this.showHeatMap) {
-        if (this.$refs.heatmapLayer == undefined) {
+        if (!this.$refs.heatmapLayer) {
           this.$refs.heatmapLayer = new L.HeatLayer(this.points, heatmapConfig);
         }
         this.$refs.map.removeLayer(this.$refs.mvcPointsLayer);
         this.$refs.map.addLayer(this.$refs.heatmapLayer);
+        this.$refs.heatmapLayer.setLatLngs(this.points);
       } else {
         this.points.forEach(point => {
           let marker = new L.circleMarker([point.lat, point.lng], {
@@ -130,15 +139,6 @@ export default {
       this.$router.push({ name: "Area", query: params });
       this.drawPoints();
       this.handleZoomChange();
-    },
-    centerUpdate(center) {
-      this.currentCenter = center;
-    },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
-    },
-    innerClick() {
-      alert("Click!");
     }
   }
 };
