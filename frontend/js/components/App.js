@@ -35,8 +35,7 @@ export default class App extends PureComponent {
 
         const [fromDate, toDate] = getYearRange();
         this.router = new Router(createHistory({}))
-        this.searchParams = this.router.get_params()
-        console.log(this.searchParams)
+        const params = this.router.get_params()
 
         this.state = {
             mvcs: null,
@@ -58,14 +57,14 @@ export default class App extends PureComponent {
             selectedMvc: null,
             showMvcDetails: false,
             filters: {
-                fromDate: this.getDate(params.fromDate) || null,
-                toDate: this.getDate(params.toDate) || null,
+                fromDate: this.getDate(params.fromDate) || fromDate,
+                toDate: this.getDate(params.toDate) || toDate,
                 mvcType: +params.mvcType || null,
                 nearby: +params.nearby || null,
                 offence: +params.offence || null,
                 street: +params.street || null,
                 participantType: (params.participantType && params.participantType.split('_').map(Number)) || null,
-                conditionType: params.conditionType || null,
+                conditionType: +params.conditionType || null,
                 onlyDead: params.onlyDead || false,
             },
             stats: {},
@@ -94,9 +93,6 @@ export default class App extends PureComponent {
             ]
             let dictionariesAsHashMaps = dictionariesToHashMaps(dictionaries);
             dictionaries = sortDictionaries(dictionaries);
-
-
-
             this.setState({dictionaries, dictionariesAsHashMaps});
         });
 
