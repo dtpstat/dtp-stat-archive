@@ -1,5 +1,10 @@
 from django.db import models
-from django_filters import FilterSet, NumberFilter, CharFilter
+from django_filters import (
+    FilterSet,
+    NumberFilter,
+    CharFilter,
+    DateTimeFromToRangeFilter,
+)
 
 from dtpmapapp.models import MVC
 
@@ -13,8 +18,11 @@ class MVCFilter(FilterSet):
     parent_region_name = CharFilter(
         field_name="region__parent_region__name", lookup_expr="iexact"
     )
+
     mvc_type = NumberFilter(field_name="type", lookup_expr="exact")
     mvc_type_string = CharFilter(method="filter_mvc_type_string")
+
+    datetime = DateTimeFromToRangeFilter(field_name="datetime")
 
     ne_lat = NumberFilter(field_name="lat", lookup_expr="lte")
     ne_lng = NumberFilter(field_name="lng", lookup_expr="lte")
@@ -32,6 +40,7 @@ class MVCFilter(FilterSet):
             "parent_region_name",
             "mvc_type",
             "mvc_type_string",
+            'datetime',
             "ne_lat",
             "ne_lng",
             "sw_lat",
