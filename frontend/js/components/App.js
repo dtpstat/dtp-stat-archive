@@ -31,11 +31,12 @@ export default class App extends PureComponent {
         this.handleShowMap = this.handleShowMap.bind(this);
         this.handleShowStats = this.handleShowStats.bind(this);
         this.handleToggleStats = this.handleToggleStats.bind(this);
+        this.handleConditionTypeChange = this.handleConditionTypeChange.bind(this);
 
         const [fromDate, toDate] = getYearRange();
         this.router = new Router(createHistory({}))
-        const params = this.router.get_params()
-        console.log(params)
+        this.searchParams = this.router.get_params()
+        console.log(this.searchParams)
 
         this.state = {
             mvcs: null,
@@ -64,6 +65,7 @@ export default class App extends PureComponent {
                 offence: +params.offence || null,
                 street: +params.street || null,
                 participantType: (params.participantType && params.participantType.split('_').map(Number)) || null,
+                conditionType: params.conditionType || null,
                 onlyDead: params.onlyDead || false,
             },
             stats: {},
@@ -84,11 +86,17 @@ export default class App extends PureComponent {
             participantType: (params.participantType && params.participantType.join('_')) || undefined,
         });
     }
-
     componentDidMount() {
         let getDictionariesPromise = apiAccess.getDictionaries().then((dictionaries) => {
+            dictionaries.conditions = [
+                {id: 1, name: "Ночь"} ,
+                {id: 2, name: "День"} ,
+            ]
             let dictionariesAsHashMaps = dictionariesToHashMaps(dictionaries);
             dictionaries = sortDictionaries(dictionaries);
+
+
+
             this.setState({dictionaries, dictionariesAsHashMaps});
         });
 
@@ -163,6 +171,12 @@ export default class App extends PureComponent {
     handleMvcTypeChange(selectedMvcType) {
         let selectedMvcTypeId = selectedMvcType ? selectedMvcType.id : null;
         let filters = Object.assign({}, this.state.filters, {mvcType: selectedMvcTypeId});
+        this.handleFiltersChange(filters);
+    }
+
+    handleConditionTypeChange(selectedConditionType) {
+        let selectedConditionTypeId = selectedConditionType ? selectedConditionType.id : null;
+        let filters = Object.assign({}, this.state.filters, { conditionType: selectedConditionTypeId });
         this.handleFiltersChange(filters);
     }
 
@@ -275,9 +289,11 @@ export default class App extends PureComponent {
                                 mvcTypes={dictionaries.mvc_types}
                                 nearby={dictionaries.nearby}
                                 offences={dictionaries.offences}
+                                conditions={dictionaries.conditions}
                                 participantTypes={dictionaries.mvc_participant_types}
                                 onDateRangeChange={this.handleDateRangeChange}
                                 onMvcTypeChange={this.handleMvcTypeChange}
+                                onConditionTypeChange={this.handleConditionTypeChange}
                                 onNearbyChange={this.handleNearbyChange}
                                 onOffenceChange={this.handleOffenceChange}
                                 onShowMap={this.handleShowMap}
@@ -292,6 +308,7 @@ export default class App extends PureComponent {
                                 selectedStreet={filters.street}
                                 selectedParticipantType={filters.participantType}
                                 selectedOnlyDead={filters.onlyDead}
+                                selectedCondition={filters.conditionType}
                                 showStats={this.state.showStats}
                                 streets={this.state.streetsFromMvcs}
                             />

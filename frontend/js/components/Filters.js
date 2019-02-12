@@ -17,6 +17,7 @@ export default class Filters extends PureComponent {
         this.state = {
             mvcTypeOptions: this.addNullOption(props.mvcTypes, 'Все'),
             offenceOptions: this.addNullOption(props.offences, 'Любое'),
+            conditionOptions: this.addNullOption(props.conditions, 'Любое'),
             streetOptions: this.addNullOption(props.streets, 'Все'),
             nearbyOptions: this.addNullOption(props.nearby, 'Все'),
             streetSearchInput: '',
@@ -32,6 +33,10 @@ export default class Filters extends PureComponent {
 
         if (props.offences !== prevProps.offences) {
             this.setState({ offenceOptions: this.addNullOption(props.offences, 'Любое') });
+        }
+
+        if (props.conditions !== prevProps.conditions) {
+            this.setState({ conditionOptions: this.addNullOption(props.conditions, 'Любое') });
         }
 
         if (props.streets !== prevProps.streets) {
@@ -87,6 +92,7 @@ export default class Filters extends PureComponent {
         const selectedOffenceOption = state.offenceOptions.find(opt => opt.id === props.selectedOffence);
         const selectedStreetOption = state.streetOptions.find(opt => opt.id === props.selectedStreet);
         const selectedNearbyOption = state.nearbyOptions.find(opt => opt.id === props.selectedNearby);
+        const selectedConditionOption = state.conditionOptions.find(opt => opt.id === props.selectedCondition);
 
         const { participantTypeOptions, selectedParticipantTypeOption } = this.getParticipantTypeParams(this.props);
         const { selectedOnlyDeadOption } = this.getOnlyDeadOption(this.props);
@@ -166,6 +172,19 @@ export default class Filters extends PureComponent {
                     </div>
 
                     <div className="form-group">
+                        <label htmlFor="conditionsFilter">
+                            По условиям
+                        </label>
+
+                        <FilterSelect
+                            id="conditionsFilter"
+                            onChange={props.onConditionTypeChange}
+                            options={state.conditionOptions}
+                            value={selectedConditionOption}
+                        />
+                    </div>
+
+                    <div className="form-group">
                         <label htmlFor="offenceFilter">
                             По нарушению ПДД
                         </label>
@@ -231,6 +250,7 @@ Filters.props = {
     mvcTypes: PropTypes.object.isRequired,
     nearby: PropTypes.array.isRequired,
     offences: PropTypes.object.isRequired,
+    conditions: PropTypes.object.isRequired,
     participantTypes: PropTypes.array.isRequired,
     onDateRangeChange: PropTypes.func,
     onMvcTypeChange: PropTypes.func,
@@ -241,12 +261,14 @@ Filters.props = {
     onShowStats: PropTypes.func,
     onStreetChange: PropTypes.func,
     onOnlyDeadChange: PropTypes.func,
+    onConditionTypeChange: PropTypes.func,
     selectedMvcType: PropTypes.any,
     selectedNearby: PropTypes.any,
     selectedOffence: PropTypes.any,
     selectedStreet: PropTypes.any,
     selectedParticipantType: PropTypes.any,
     selectedOnlyDead: PropTypes.any,
+    selectedCondition: PropTypes.any,
     showStats: PropTypes.bool,
     streets: PropTypes.object.isRequired,
 };

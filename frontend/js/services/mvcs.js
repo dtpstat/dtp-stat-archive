@@ -130,6 +130,15 @@ function isMvcFiltered(mvc, mvcFilters) {
         }
     }
 
+    if (mvcFilters.conditionType) {
+        if (mvcFilters.conditionType === 1 && mvc.conditions.includes("Светлое время суток")) {
+            return false;
+        }
+        if (mvcFilters.conditionType === 2 && !mvc.conditions.includes("Светлое время суток")) {
+            return false;
+        }
+    }
+
     if (mvcFilters.fromDate && mvcFilters.toDate) {
         if (mvcFilters.fromDate > mvc.datetime ||
             mvcFilters.toDate < mvc.datetime
