@@ -57,21 +57,29 @@ export default class App extends PureComponent {
             selectedMvc: null,
             showMvcDetails: false,
             filters: {
-                fromDate,
-                toDate,
-                mvcType: null,
-                nearby: null,
-                offence: null,
-                street: null,
-                participantType: null,
-                onlyDead: false,
+                fromDate: this.getDate(this.searchParams.fromDate) || null,
+                toDate: this.getDate(this.searchParams.toDate) || null,
+                mvcType: +this.searchParams.mvcType || null,
+                nearby: +this.searchParams.nearby || null,
+                offence: +this.searchParams.offence || null,
+                street: +this.searchParams.street || null,
+                participantType: +this.searchParams.participantType || null,
+                onlyDead: +this.searchParams.onlyDead || false,
             },
             stats: {},
             showStats: false,
-            searchParams: this.router.get_params(),
+            searchParams: this.searchParams,
         };
     }
-    
+
+    getDate(s){
+        return s && moment(s, "YYYY.MM.DD")
+    }
+
+    getFlatParams(params){
+
+    }
+
     componentDidMount() {
         let getDictionariesPromise = apiAccess.getDictionaries().then((dictionaries) => {
             let dictionariesAsHashMaps = dictionariesToHashMaps(dictionaries);
@@ -178,6 +186,12 @@ export default class App extends PureComponent {
         const filteredMvcs = filterMvcs(this.state.mvcs, filters);
         const stats = this.calcStats(filteredMvcs);
         this.setState({ filters, filteredMvcs, stats });
+
+        let friendlyUrlFilters = Object.assign({}, this.state.filters, {
+            fromDate: moment(this.state.filters.fromDate).format("YYYY.MM.DD"),
+            toDate: moment(this.state.filters.toDate).format("YYYY.MM.DD"),
+             });
+        this.router.set_params(friendlyUrlFilters, false)
     }
 
     handleMvcSelected(mvc) {
@@ -185,6 +199,15 @@ export default class App extends PureComponent {
     }
 
     handleMapChanges(mapParam) {
+        let filters = Object.assign({}, this.state.filters, mapParam);
+        this.setState({ filters: filters });
+
+        let friendlyUrlFilters = Object.assign({}, filters, {
+            fromDate: moment(this.state.filters.fromDate).format("YYYY.MM.DD"),
+            toDate: moment(this.state.filters.toDate).format("YYYY.MM.DD"),
+             });
+        this.router.set_params(friendlyUrlFilters, false)
+
         this.router.set_params(mapParam, true)
     }
 
