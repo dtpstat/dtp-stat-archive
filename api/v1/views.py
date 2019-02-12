@@ -1,7 +1,7 @@
+from django.db.models import Q, Sum, Case, When
+from django.db import models
 from rest_framework import viewsets
 from rest_framework.response import Response
-
-from django.db.models import Q, Sum
 
 from dtpmapapp.models import (
     MVC,
@@ -44,21 +44,62 @@ class MVCViewSet(viewsets.ModelViewSet):
 
         # serializer = self.get_serializer(queryset, many=True)
         aggregate = queryset.aggregate(
-            dead=Sum("dead"),
-            dead_auto=Sum("dead", filter=Q(participant_type__name="auto")),
-            dead_bicycle=Sum("dead", filter=Q(participant_type__name="bicycle")),
-            dead_pedestrian=Sum("dead", filter=Q(participant_type__name="pedestrian")),
-            injured=Sum("injured"),
-            injured_auto=Sum("injured", filter=Q(participant_type__name="auto")),
-            injured_bicycle=Sum("injured", filter=Q(participant_type__name="bicycle")),
-            injured_pedestrian=Sum(
-                "injured", filter=Q(participant_type__name="pedestrian")
+            dead=models.Sum("dead"),
+            dead_auto=models.Sum(
+                "dead", filter=models.Q(participant_type__name="auto")
+            ),
+            dead_bicycle=models.Sum(
+                "dead", filter=models.Q(participant_type__name="bicycle")
+            ),
+            dead_pedestrian=models.Sum(
+                "dead", filter=models.Q(participant_type__name="pedestrian")
+            ),
+            injured=models.Sum("injured"),
+            injured_auto=models.Sum(
+                "injured", filter=models.Q(participant_type__name="auto")
+            ),
+            injured_bicycle=models.Sum(
+                "injured", filter=models.Q(participant_type__name="bicycle")
+            ),
+            injured_pedestrian=models.Sum(
+                "injured", filter=models.Q(participant_type__name="pedestrian")
             ),
         )
+        annotate = queryset.annotate(
+            color=models.Case(
+                models.When(
+                    participant_type__name="auto", then=models.Value("#FFCA68")
+                ),
+                models.When(
+                    participant_type__name="bicycle", then=models.Value("#97CA98")
+                ),
+                models.When(
+                    participant_type__name="pedestrian", then=models.Value("#96CBFE")
+                ),
+                default=models.Value("#000000"),
+                output_field=models.CharField(),
+            )
+        )
+        center = None
+        if 'ne_lat' not in request.query_params and 'ne_lng' not in request.query_params and 'sw_lat' not in request.query_params and 'sw_lng' not in request.query_params:
+            center = {'lat': 54.19, 'lng': 45.18}
+        if "region_name" in request.query_params:
+            try:
+                region = Region.objects.get(name__iexact=request.query_params["region_name"])
+            except Region.DoesNotExist:
+                region = None
+            center = {'lat': region.latitude, 'lng': region.longitude} if region else None
+        elif "parent_region_name" in request.query_params:
+            try:
+                region = Region.objects.get(name__iexact=request.query_params["parent_region_name"])
+            except Region.DoesNotExist:
+                region = None
+            center = {'lat': region.latitude, 'lng': region.longitude} if region else None
 
         data = {
             "count": queryset.count(),
-            "result": queryset,
+            "center": center,
+            "result": annotate,
             "dead": aggregate["dead"],
             "deadAuto": aggregate["dead_auto"],
             "deadBicycle": aggregate["dead_bicycle"],
