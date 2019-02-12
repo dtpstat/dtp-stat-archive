@@ -13,6 +13,9 @@ class MVCFilter(FilterSet):
     parent_region_name = CharFilter(
         field_name="region__parent_region__name", lookup_expr="iexact"
     )
+    mvc_type = NumberFilter(field_name="type", lookup_expr="exact")
+    mvc_type_string = CharFilter(method="filter_mvc_type_string")
+
     ne_lat = NumberFilter(field_name="lat", lookup_expr="lte")
     ne_lng = NumberFilter(field_name="lng", lookup_expr="lte")
     sw_lat = NumberFilter(field_name="lat", lookup_expr="gte")
@@ -27,10 +30,17 @@ class MVCFilter(FilterSet):
             "region_name",
             "parent_region",
             "parent_region_name",
+            "mvc_type",
+            "mvc_type_string",
             "ne_lat",
             "ne_lng",
             "sw_lat",
             "sw_lng",
+        )
+
+    def filter_mvc_type_string(self, queryset, name, value):
+        return queryset.filter(
+            models.Q(name__icontains=value) | models.Q(alias__icontains=value)
         )
 
     def filter_queryset(self, queryset):
