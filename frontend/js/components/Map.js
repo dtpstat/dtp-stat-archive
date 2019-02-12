@@ -118,7 +118,6 @@ export default class Map extends Component {
     }
 
     createHeatmapLayer(mvcs) {
-        console.log(mvcs.length);
         const heatmapLayer = new HeatmapOverlay(heatmapConfig);
 
         const pointValue = 1;
