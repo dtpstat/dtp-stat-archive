@@ -32,6 +32,7 @@ export default class App extends PureComponent {
         this.handleShowStats = this.handleShowStats.bind(this);
         this.handleToggleStats = this.handleToggleStats.bind(this);
         this.handleConditionTypeChange = this.handleConditionTypeChange.bind(this);
+        this.handleFiltersReset = this.handleFiltersReset.bind(this);
 
         const [fromDate, toDate] = getYearRange();
         this.router = new Router(createHistory({}))
@@ -59,17 +60,19 @@ export default class App extends PureComponent {
             filters: {
                 fromDate: this.getDate(params.fromDate) || fromDate,
                 toDate: this.getDate(params.toDate) || toDate,
+                zoom: +params.zoom || null,
+                lat: +params.lat || null,
+                lng: +params.lng || null,
                 mvcType: +params.mvcType || null,
                 nearby: +params.nearby || null,
                 offence: +params.offence || null,
                 street: +params.street || null,
-                participantType: (params.participantType && params.participantType.split('_').map(Number)) || null,
                 conditionType: +params.conditionType || null,
+                participantType: (params.participantType && params.participantType.split('_').map(Number)) || null,
                 onlyDead: params.onlyDead || false,
             },
             stats: {},
             showStats: false,
-            searchParams: params,
         };
     }
 
@@ -78,18 +81,25 @@ export default class App extends PureComponent {
     }
 
     getUrlParams(params) {
-        return Object.assign({}, params, {
+        const removeEmpty = (obj) => {
+            Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key]);
+        }
+        let newParams = Object.assign({}, params, {
             fromDate: moment(params.fromDate).format("YYYY.MM.DD"),
             toDate: moment(params.toDate).format("YYYY.MM.DD"),
             onlyDead: params.onlyDead || undefined,
             participantType: (params.participantType && params.participantType.join('_')) || undefined,
         });
+        removeEmpty(newParams)
+        return newParams;
+
     }
+
     componentDidMount() {
         let getDictionariesPromise = apiAccess.getDictionaries().then((dictionaries) => {
             dictionaries.conditions = [
-                {id: 1, name: "Ночь"} ,
-                {id: 2, name: "День"} ,
+                {id: 1, name: "Ночь"},
+                {id: 2, name: "День"},
             ]
             let dictionariesAsHashMaps = dictionariesToHashMaps(dictionaries);
             dictionaries = sortDictionaries(dictionaries);
@@ -102,7 +112,7 @@ export default class App extends PureComponent {
         });
 
         let getParticipantTypePromise = apiAccess.getParticipantTypes().then((items) => {
-            if (this.state.filters.participantType){
+            if (this.state.filters.participantType) {
                 return;
             }
             let participantTypeItem = items.mvc_participant_types.filter(function (item) {
@@ -172,7 +182,7 @@ export default class App extends PureComponent {
 
     handleConditionTypeChange(selectedConditionType) {
         let selectedConditionTypeId = selectedConditionType ? selectedConditionType.id : null;
-        let filters = Object.assign({}, this.state.filters, { conditionType: selectedConditionTypeId });
+        let filters = Object.assign({}, this.state.filters, {conditionType: selectedConditionTypeId});
         this.handleFiltersChange(filters);
     }
 
@@ -206,6 +216,19 @@ export default class App extends PureComponent {
         this.setState({filters, filteredMvcs, stats});
 
         this.router.set_params(this.getUrlParams(filters), false)
+    }
+
+    handleFiltersReset(filters) {
+        let emptyFilters = Object.assign({}, this.state.filters, {
+            mvcType: null,
+            nearby: null,
+            offence: null,
+            street: null,
+            conditionType: null,
+            participantType: this.state.dictionaries.mvc_participant_types.map((x) => x.id),
+            onlyDead: false,
+        });
+        this.handleFiltersChange(emptyFilters);
     }
 
     handleMvcSelected(mvc) {
@@ -255,7 +278,7 @@ export default class App extends PureComponent {
                         <MapWithStats
                             cityName={this.props.cityName}
                             defaultCoord={{latitude: this.props.regionLat, longitude: this.props.regionLon}}
-                            searchParams={this.state.searchParams}
+                            searchParams={this.state.filters}
                             dictionaries={this.state.dictionariesAsHashMaps}
                             mvcs={this.state.filteredMvcs || this.state.mvcs}
                             mapObjectsMarkersData={this.state.mapObjectsMarkersData}
@@ -298,6 +321,7 @@ export default class App extends PureComponent {
                                 onParticipantTypeChange={this.handleParticipantTypeChange}
                                 onOnlyDeadChange={this.handleOnlyDeadChange}
                                 onMarkersChange={this.handleMarkers}
+                                onFilterReset={this.handleFiltersReset}
                                 selectedMvcType={filters.mvcType}
                                 selectedNearby={filters.nearby}
                                 selectedOffence={filters.offence}
