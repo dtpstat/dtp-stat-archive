@@ -1,0 +1,57 @@
+language: python
+python: "3.7"
+dist: xenial
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+
+jobs:
+  include:
+    - stage: test
+      name: "local environment"
+      install:
+        - pip install -r requirements.txt
+        - npm install -g npx
+        - npm install
+      env:
+        - DATABASE_URL: postgres://django:django@localhost:5432/django
+      before_script:
+        - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+        - sudo systemctl restart postgresql
+        - sleep 1
+        - psql -c "CREATE DATABASE django;" -U postgres
+        - psql -c "CREATE ROLE django WITH LOGIN PASSWORD 'django';" -U postgres
+        - psql -c "ALTER ROLE django CREATEDB;" -U postgres
+        - psql -c "GRANT ALL PRIVILEGES ON DATABASE django TO django;" -U postgres
+        - echo "Starting server"
+        - python manage.py migrate
+        - python manage.py createcachetable
+        - python manage.py runserver localhost:8000 &
+        - SERVER_PID=$!
+      script:
+        - tests/travis/simple_curl_get.sh
+      after_script: kill -SIGTERM $SERVER_PID || echo "Process $SERVER_PID not running"
+
+    - stage: test
+      name: "dockerized environment"
+      env:
+        - DATABASE_URL: postgres://django:django@db:5432/django
+      before_script:
+        - cp docker/.dockerenv.example docker/.dockerenv
+        - sed -i 's/DEBUG=.*/DEBUG=true/' docker/.dockerenv
+      script:
+        - docker-compose build
+        - docker-compose up -d db
+        - docker-compose run -T app sh -c 'until $(nc -w 1 db 5432); do echo "Waiting for database..."; sleep 5; done'
+        - docker-compose up -d app
+        - tests/travis/simple_curl_get.sh
+      after_success: docker-compose stop
+env:
+  global:
+    - DEBUG: true
+    - SECRET_KEY: "a4e8d657d54bfcd26957264327456b9c7bed84db"
+    - APP_HOST: localhost
+    - APP_PORT: 8000
