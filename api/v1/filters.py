@@ -22,6 +22,9 @@ class MVCFilter(FilterSet):
     mvc_type = NumberFilter(field_name="type", lookup_expr="exact")
     mvc_type_string = CharFilter(method="filter_mvc_type_string")
 
+    participant_type = NumberFilter(field_name="participant_type", lookup_expr="exact")
+    participant_type_string = CharFilter(method="filter_participant_type_string")
+
     datetime = DateTimeFromToRangeFilter(field_name="datetime")
 
     ne_lat = NumberFilter(field_name="lat", lookup_expr="lte")
@@ -40,7 +43,9 @@ class MVCFilter(FilterSet):
             "parent_region_name",
             "mvc_type",
             "mvc_type_string",
-            'datetime',
+            "datetime",
+            "participant_type",
+            "participant_type_string",
             "ne_lat",
             "ne_lng",
             "sw_lat",
@@ -48,6 +53,11 @@ class MVCFilter(FilterSet):
         )
 
     def filter_mvc_type_string(self, queryset, name, value):
+        return queryset.filter(
+            models.Q(name__icontains=value) | models.Q(alias__icontains=value)
+        )
+
+    def filter_participant_type_string(self, queryset, name, value):
         return queryset.filter(
             models.Q(name__icontains=value) | models.Q(alias__icontains=value)
         )
