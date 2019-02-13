@@ -1,5 +1,6 @@
 from django.db import models
 from django_filters import (
+    BaseCSVFilter,
     FilterSet,
     NumberFilter,
     CharFilter,
@@ -7,6 +8,9 @@ from django_filters import (
 )
 
 from dtpmapapp.models import MVC
+
+class CharArrayFilter(BaseCSVFilter, CharFilter):
+     pass
 
 
 class MVCFilter(FilterSet):
@@ -30,6 +34,9 @@ class MVCFilter(FilterSet):
 
     datetime = DateTimeFromToRangeFilter(field_name="datetime")
 
+    conditions = CharArrayFilter(field_name="conditions", lookup_expr="overlap")
+
+
     ne_lat = NumberFilter(field_name="lat", lookup_expr="lte")
     ne_lng = NumberFilter(field_name="lng", lookup_expr="lte")
     sw_lat = NumberFilter(field_name="lat", lookup_expr="gte")
@@ -46,11 +53,12 @@ class MVCFilter(FilterSet):
             "parent_region_name",
             "mvc_type",
             "mvc_type_string",
-            "datetime",
             "participant_type",
             "participant_type_string",
             "street",
             "street_string",
+            "datetime",
+            "conditions",
             "ne_lat",
             "ne_lng",
             "sw_lat",
