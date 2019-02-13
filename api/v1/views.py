@@ -40,10 +40,9 @@ class MVCViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
             self.get_queryset()
-            .only("id", "datetime", "participant_type", "lng", "lat", "conditions")
-            .values("id", "datetime", "participant_type", "lng", "lat", "conditions")
+            .only("id", "datetime", "participant_type", "lng", "lat")
+            .values("id", "datetime", "participant_type", "lng", "lat")
         )
-        print(queryset.query)
 
         # serializer = self.get_serializer(queryset, many=True)
         conditions = set(chain(*queryset.values_list("conditions", flat=True)))
