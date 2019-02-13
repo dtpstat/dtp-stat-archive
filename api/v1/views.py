@@ -1,7 +1,9 @@
-from django.db.models import Q, Sum, Case, When
+from django.db.models import Q, Sum, Case, When, F, Func
 from django.db import models
-from rest_framework import viewsets
+from django.contrib.postgres.aggregates import ArrayAgg
+from rest_framework import viewsets, views
 from rest_framework.response import Response
+from itertools import chain
 
 from dtpmapapp.models import (
     MVC,
@@ -38,11 +40,13 @@ class MVCViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
             self.get_queryset()
-            .only("id", "datetime", "participant_type", "lng", "lat")
-            .values("id", "datetime", "participant_type", "lng", "lat")
+            .only("id", "datetime", "participant_type", "lng", "lat", "conditions")
+            .values("id", "datetime", "participant_type", "lng", "lat", "conditions")
         )
+        print(queryset.query)
 
         # serializer = self.get_serializer(queryset, many=True)
+        conditions = set(chain(*queryset.values_list("conditions", flat=True)))
         aggregate = queryset.aggregate(
             dead=models.Sum("dead"),
             dead_auto=models.Sum(
@@ -65,6 +69,7 @@ class MVCViewSet(viewsets.ModelViewSet):
                 "injured", filter=models.Q(participant_type__name="pedestrian")
             ),
         )
+
         annotate = queryset.annotate(
             color=models.Case(
                 models.When(
@@ -81,25 +86,39 @@ class MVCViewSet(viewsets.ModelViewSet):
             )
         )
         center = None
-        if 'ne_lat' not in request.query_params and 'ne_lng' not in request.query_params and 'sw_lat' not in request.query_params and 'sw_lng' not in request.query_params:
-            center = {'lat': 54.19, 'lng': 45.18}
+        if (
+            "ne_lat" not in request.query_params
+            and "ne_lng" not in request.query_params
+            and "sw_lat" not in request.query_params
+            and "sw_lng" not in request.query_params
+        ):
+            center = {"lat": 54.19, "lng": 45.18}
         if "region_name" in request.query_params:
             try:
-                region = Region.objects.get(name__iexact=request.query_params["region_name"])
+                region = Region.objects.get(
+                    name__iexact=request.query_params["region_name"]
+                )
             except Region.DoesNotExist:
                 region = None
-            center = {'lat': region.latitude, 'lng': region.longitude} if region else None
+            center = (
+                {"lat": region.latitude, "lng": region.longitude} if region else None
+            )
         elif "parent_region_name" in request.query_params:
             try:
-                region = Region.objects.get(name__iexact=request.query_params["parent_region_name"])
+                region = Region.objects.get(
+                    name__iexact=request.query_params["parent_region_name"]
+                )
             except Region.DoesNotExist:
                 region = None
-            center = {'lat': region.latitude, 'lng': region.longitude} if region else None
+            center = (
+                {"lat": region.latitude, "lng": region.longitude} if region else None
+            )
 
         data = {
             "count": queryset.count(),
             "center": center,
             "result": annotate,
+            "conditions": conditions,
             "dead": aggregate["dead"],
             "deadAuto": aggregate["dead_auto"],
             "deadBicycle": aggregate["dead_bicycle"],
