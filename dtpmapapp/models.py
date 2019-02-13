@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db.models.indexes import Index
 
 
@@ -86,7 +86,7 @@ class MVC(models.Model):
     participant_type = models.ForeignKey(MVCParticipantType, help_text="MVC Participant Type", null=True, blank=True, default=None, on_delete=models.SET_NULL, db_index=True)
     lng = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
     lat = models.FloatField(help_text="MVC longitude", null=True, blank=True, default=None)
-    conditions = JSONField(help_text="MVC conditions", null=True, blank=True, default=None)
+    conditions = ArrayField(models.CharField(max_length=1000), help_text="MVC conditions", null=True, blank=True, default=None)
     dead = models.IntegerField(help_text="MVC dead count", null=True, blank=True, default=None, db_index=True)
     injured = models.IntegerField(help_text="MVC injured count", null=True, blank=True, default=None, db_index=True)
     participants = models.IntegerField(help_text="MVC participants count", null=True, blank=True, default=None, db_index=True)
