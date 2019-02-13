@@ -121,8 +121,8 @@ export default class App extends PureComponent {
 
             let participantType = participantTypeItem.map(item => item.id);
 
-            let filters = Object.assign({}, this.state.filters, {participantType: participantType});
-            this.setState({filters: filters});
+            let filters = Object.assign({}, this.state.filters, {participantType});
+            this.setState({filters});
 
         });
 
