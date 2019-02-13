@@ -25,6 +25,9 @@ class MVCFilter(FilterSet):
     participant_type = NumberFilter(field_name="participant_type", lookup_expr="exact")
     participant_type_string = CharFilter(method="filter_participant_type_string")
 
+    street = NumberFilter(field_name="street", lookup_expr="exact")
+    street_string = CharFilter(field_name="street__name", lookup_expr="icontains")
+
     datetime = DateTimeFromToRangeFilter(field_name="datetime")
 
     ne_lat = NumberFilter(field_name="lat", lookup_expr="lte")
@@ -46,6 +49,8 @@ class MVCFilter(FilterSet):
             "datetime",
             "participant_type",
             "participant_type_string",
+            "street",
+            "street_string",
             "ne_lat",
             "ne_lng",
             "sw_lat",
