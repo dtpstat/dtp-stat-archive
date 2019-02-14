@@ -4,7 +4,6 @@ import DTPFooter from "@/components/dtp-footer/DTPFooter"
 
 
 @Component({
-    
     components: {
         "dtp-navbar": DTPNavbar,
         "dtp-footer": DTPFooter

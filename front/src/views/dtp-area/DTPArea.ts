@@ -3,7 +3,7 @@ import axios from "axios";
 import L from "leaflet";
 import { BriefType, MVC } from "@/types"
 
-import DTPMap from "@/components/dtp-map/DTPMap.vue";
+import DTPMap from "@/components/dtp-map/DTPMap";
 import DTPBrief from "@/components/dtp-brief/DTPBrief";
 // import DTPExtraStats from "@/components/DTPExtraStats";
 // import DTPPanelOverlay from "@/components/DTPPanelOverlay";
