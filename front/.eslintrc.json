@@ -1,0 +1,27 @@
+{
+    "root": true,
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:vue/essential",
+        "eslint:recommended",
+        "@vue/typescript"
+    ],
+    "rules": {
+        "no-console": "off"
+    },
+    "parserOptions": {
+        "experimentalDecorators": true,
+        "parser": "@typescript-eslint/parser",
+        "sourceType": "module",
+        "parserOptions": {
+            "ecmaFeatures": {
+                "jsx": true,
+                "modules": true
+            }
+        }
+    }
+}
