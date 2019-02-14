@@ -2,7 +2,7 @@
   <nav class="navbar topbar navbar-expand">
     <div class="container">
       <router-link class="navbar-brand" :to="{ name: 'Index' }">
-        <img src="../assets/logo.png" style="width: 50px;height: auto;margin-right: 10px"> Карта ДТП
+        <img src="@/assets/logo.png" style="width: 50px;height: auto;margin-right: 10px"> Карта ДТП
       </router-link>
 
       <ul class="nav navbar-nav ml-auto">
@@ -16,8 +16,4 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: "dtp-navbar"
-};
-</script>
+<script lang="ts" src="./DTPNavbar.ts"></script>

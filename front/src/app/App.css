@@ -1,25 +1,3 @@
-<template>
-  <div class="dtp-app-container d-flex flex-column">
-    <dtp-navbar></dtp-navbar>
-    <router-view></router-view>
-    <!-- <dtp-footer></dtp-footer> -->
-  </div>
-</template>
-
-<script>
-import DTPNavbar from "./components/DTPNavbar";
-import DTPFooter from "./components/DTPFooter";
-export default {
-  name: "App",
-  components: {
-    "dtp-navbar": DTPNavbar,
-    "dtp-footer": DTPFooter
-  }
-};
-</script>
-
-<style>
-@import "../node_modules/leaflet/dist/leaflet.css";
 html,
 body {
   width: 100%;
@@ -608,4 +586,3 @@ input.form-control:focus {
 .extra-stats table.stats-counts-list td.value {
   padding: 1px;
 }
-</style>

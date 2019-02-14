@@ -6,8 +6,8 @@
           <div style="max-width: 500px;margin: 0 auto;">
             <div style="float: left;margin: 10px 30px 10px 10px">
               <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-                <img src="../assets/creative-commons-1.png">
-                <img src="../assets/creative-commons-2.png">
+                <img src="@/assets/creative-commons-1.png">
+                <img src="@/assets/creative-commons-2.png">
               </a>
             </div>
 
@@ -29,9 +29,3 @@
     </div>
   </footer>
 </template>
-
-<script>
-export default {
-  name: "dtp-footer"
-};
-</script>

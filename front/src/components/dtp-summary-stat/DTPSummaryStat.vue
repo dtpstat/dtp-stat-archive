@@ -18,8 +18,4 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "dtp-summary"
-};
-</script>
+<script lang="ts" src="./DTPSummaryStat.ts"></script>

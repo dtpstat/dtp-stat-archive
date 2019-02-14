@@ -24,17 +24,17 @@
             <td>
               <div class="row justify-content-center">
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/driver.png">
+                  <img src="@/assets/driver.png">
                   <div class="media-body">{{injuredAuto}}</div>
                 </div>
 
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/pedestrian.png">
+                  <img src="@/assets/pedestrian.png">
                   <div class="media-body">{{injuredPedestrian}}</div>
                 </div>
 
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/cyclist.png">
+                  <img src="@/assets/cyclist.png">
                   <div class="media-body">{{injuredBicycle}}</div>
                 </div>
               </div>
@@ -43,17 +43,17 @@
             <td>
               <div class="row justify-content-center">
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/driver.png">
+                  <img src="@/assets/driver.png">
                   <div class="media-body">{{deadAuto}}</div>
                 </div>
 
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/pedestrian.png">
+                  <img src="@/assets/pedestrian.png">
                   <div class="media-body">{{deadPedestrian}}</div>
                 </div>
 
                 <div class="col-auto media align-items-center">
-                  <img src="../assets/cyclist.png">
+                  <img src="@/assets/cyclist.png">
                   <div class="media-body">{{deadBicycle}}</div>
                 </div>
               </div>
@@ -64,20 +64,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: "dtp-brief-stats",
-  props: {
-    dead: Number,
-    deadAuto: Number,
-    deadBicycle: Number,
-    deadPedestrian: Number,
-    injured: Number,
-    injuredAuto: Number,
-    injuredBicycle: Number,
-    injuredPedestrian: Number,
-    mvcCount: Number
-  }
-};
-</script>
