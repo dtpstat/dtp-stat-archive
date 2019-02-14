@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <dtp-navbar></dtp-navbar>
     <router-view/>
     <dtp-footer></dtp-footer>
