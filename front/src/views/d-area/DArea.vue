@@ -36,4 +36,4 @@
   
 
 
-<script lang="ts" src='./DTPArea.ts'></script>
+<script lang="ts" src='./DArea.ts'></script>

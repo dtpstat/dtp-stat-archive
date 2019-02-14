@@ -64,3 +64,5 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" src="./DBrief.ts"></script>

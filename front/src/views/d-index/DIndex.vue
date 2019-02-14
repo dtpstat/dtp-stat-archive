@@ -1,8 +1,8 @@
 <template>
   <div>
     <dtp-search></dtp-search>
-    <dtp-summary-stat></dtp-summary-stat>
+    <d-summary/>
     <dtp-partners></dtp-partners>
   </div>
 </template>
-<script lang="ts" src="./DTPIndex.ts"></script>
+<script lang="ts" src="./DIndex.ts"></script>

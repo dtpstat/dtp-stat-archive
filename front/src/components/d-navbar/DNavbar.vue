@@ -16,4 +16,4 @@
   </nav>
 </template>
 
-<script lang="ts" src="./DTPNavbar.ts"></script>
+<script lang="ts" src="./DNavbar.ts"></script>

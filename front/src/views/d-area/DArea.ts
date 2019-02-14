@@ -3,16 +3,16 @@ import axios from "axios";
 import L from "leaflet";
 import { BriefType, MVC } from "@/types"
 
-import DTPMap from "@/components/dtp-map/DTPMap";
-import DTPBrief from "@/components/dtp-brief/DTPBrief";
+import DMap from "@/components/d-map/DMap";
+import DBrief from "@/components/d-brief/DBrief";
 // import DTPExtraStats from "@/components/DTPExtraStats";
 // import DTPPanelOverlay from "@/components/DTPPanelOverlay";
 // import DTPMvcDetail from "@/components/DTPMvcDetail";
 
 @Component({
     components: {
-        "dtp-map": DTPMap,
-        "dpt-brief": DTPBrief,
+        "dtp-map": DMap,
+        "dpt-brief": DBrief,
         // "dtp-extra-stats": DTPExtraStats,
         // "dtp-panel-overlay": DTPPanelOverlay
     }

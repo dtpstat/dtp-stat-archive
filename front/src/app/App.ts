@@ -1,12 +1,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import DTPNavbar from "@/components/dtp-navbar/DTPNavbar"
-import DTPFooter from "@/components/dtp-footer/DTPFooter"
+import DNavbar from "@/components/d-navbar/DNavbar"
+import DFooter from "@/components/d-footer/DFooter"
 
 
 @Component({
     components: {
-        "dtp-navbar": DTPNavbar,
-        "dtp-footer": DTPFooter
+        "dtp-navbar": DNavbar,
+        "dtp-footer": DFooter
     }
 })
 export default class App extends Vue { }

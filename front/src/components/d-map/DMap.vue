@@ -4,4 +4,4 @@
   </div>
 </template>
 
-<script lang="ts" src="./DTPMap.ts"></script>
+<script lang="ts" src="./DMap.ts"></script>

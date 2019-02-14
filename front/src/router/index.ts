@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import DTPArea from "@/views/dtp-area/DTPArea";
-import DTPIndex from "@/views/dtp-index/DTPIndex";
+import DArea from "@/views/d-area/DArea";
+import DIndex from "@/views/d-index/DIndex";
 import About from "@/views/About.vue";
 
 
@@ -13,12 +13,12 @@ export default new Router({
         {
             path: '/',
             name: 'Index',
-            component: DTPIndex
+            component: DIndex
         },
         {
             path: '/area',
             name: 'Area',
-            component: DTPArea
+            component: DArea
         },
         {
             path: '/about',

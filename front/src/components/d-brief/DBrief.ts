@@ -1,6 +1,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-export default class DTPBrief extends Vue {
+export default class DBrief extends Vue {
     @Prop() private dead!: Number;
     @Prop() private deadAuto!: Number;
     @Prop() private deadBicycle!: Number;
