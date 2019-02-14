@@ -1,12 +1,16 @@
-FROM node:slim
+FROM node:alpine
 
+ENV NODE_ENV=false
 RUN yarn global add @vue/cli
 
 RUN mkdir /app
-COPY ./front/package.json /app/
 
 WORKDIR /app
 
-RUN yarn
+COPY ./front/package.json /app/
 
-EXPOSE 8000
+RUN yarn install
+
+COPY ./front/ /app/
+
+EXPOSE 8080

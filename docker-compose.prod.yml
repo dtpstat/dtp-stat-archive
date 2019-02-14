@@ -11,7 +11,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile.prod
     image: api_app
     env_file: docker/.dockerenv
     restart: always
@@ -21,13 +21,11 @@ services:
       - db
     ports:
       - "8000:8000"
-    command: ["make", "app"]
+    command: ["make", "gunicorn"]
   web:
     build:
       context: .
       dockerfile: docker/Dockerfile.front
-    environment:
-      - NODE_ENV=false
     image: api_web    
     volumes:
       - ./front:/app
