@@ -112,20 +112,23 @@ class MVCViewSet(viewsets.ModelViewSet):
             center = (
                 {"lat": region.latitude, "lng": region.longitude} if region else None
             )
-
+        count = queryset.count()
         data = {
-            "count": queryset.count(),
+            "count": count,
             "center": center,
             "result": annotate,
             "conditions": conditions,
-            "dead": aggregate["dead"],
-            "deadAuto": aggregate["dead_auto"],
-            "deadBicycle": aggregate["dead_bicycle"],
-            "deadPedestrian": aggregate["dead_pedestrian"],
-            "injured": aggregate["injured"],
-            "injuredAuto": aggregate["injured_auto"],
-            "injuredBicycle": aggregate["injured_bicycle"],
-            "injuredPedestrian": aggregate["injured_pedestrian"],
+            "brief": {
+                "dead": aggregate["dead"],
+                "deadAuto": aggregate["dead_auto"],
+                "deadBicycle": aggregate["dead_bicycle"],
+                "deadPedestrian": aggregate["dead_pedestrian"],
+                "injured": aggregate["injured"],
+                "injuredAuto": aggregate["injured_auto"],
+                "injuredBicycle": aggregate["injured_bicycle"],
+                "injuredPedestrian": aggregate["injured_pedestrian"],
+                "mvcsCount": count
+            },
         }
         return Response(data)
 
