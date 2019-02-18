@@ -20,7 +20,10 @@ RUN apk --no-cache add \
     cairo-dev \
     pango-dev \
     gdk-pixbuf \
-    ttf-freefont
+    ttf-freefont \
+    libxml2-dev \
+    libxslt-dev
+
 
 WORKDIR /app
 COPY requirements.txt /app/
