@@ -118,7 +118,6 @@ export default class Map extends Component {
     }
 
     createHeatmapLayer(mvcs) {
-        console.log(mvcs.length);
         const heatmapLayer = new HeatmapOverlay(heatmapConfig);
 
         const pointValue = 1;
@@ -139,7 +138,7 @@ export default class Map extends Component {
 
     setLayerBasedOnZoom(mvcs) {
         const zoom = this.map.getZoom();
-        if (zoom < 15 && mvcs.length > 1000) {
+        if (zoom < 14 && mvcs.length > 1000) {
             console.log(this.heatmapLayer);
             this.map.removeLayer(this.mvcPointsLayer);
             this.map.addLayer(this.heatmapLayer);
@@ -196,7 +195,8 @@ export default class Map extends Component {
             const center = this.map.getCenter()
             this.props.onMapChanges({
                 zoom: zoom,
-                center: center
+                lat: center.lat.toFixed(4),
+                lng: center.lng.toFixed(4)
             });
         }
     }

@@ -20,23 +20,14 @@ export default class Router {
     }
 
     _get_params(location) {
-        const search = query_string.parse(location.search);
-        return {
-            zoom: +search.zoom || null,
-            lat: +search.lat || null,
-            lng: +search.lng || null,
-        }
+        return query_string.parse(location.search);
     }
 
     set_params(params, replace = false) {
         const pathname = ''
         const state = {
             pathname,
-            search: query_string.stringify({
-                lat: (params.center.lat && params.center.lat.toFixed(4)) || undefined,
-                lng: (params.center.lng && params.center.lng.toFixed(4)) || undefined,
-                zoom: params.zoom || undefined,
-            }),
+            search: query_string.stringify(params),
         }
 
         if (this.current_state && this.current_state.search === state.search)

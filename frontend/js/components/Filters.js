@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import DateRangePicker from './DateRangePicker';
 import FilterSelect from './FilterSelect';
@@ -17,6 +17,7 @@ export default class Filters extends PureComponent {
         this.state = {
             mvcTypeOptions: this.addNullOption(props.mvcTypes, 'Все'),
             offenceOptions: this.addNullOption(props.offences, 'Любое'),
+            conditionOptions: this.addNullOption(props.conditions, 'Любое'),
             streetOptions: this.addNullOption(props.streets, 'Все'),
             nearbyOptions: this.addNullOption(props.nearby, 'Все'),
             streetSearchInput: '',
@@ -24,34 +25,38 @@ export default class Filters extends PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        const { props } = this;
+        const {props} = this;
 
         if (props.mvcTypes !== prevProps.mvcTypes) {
-            this.setState({ mvcTypeOptions: this.addNullOption(props.mvcTypes, 'Все') });
+            this.setState({mvcTypeOptions: this.addNullOption(props.mvcTypes, 'Все')});
         }
 
         if (props.offences !== prevProps.offences) {
-            this.setState({ offenceOptions: this.addNullOption(props.offences, 'Любое') });
+            this.setState({offenceOptions: this.addNullOption(props.offences, 'Любое')});
+        }
+
+        if (props.conditions !== prevProps.conditions) {
+            this.setState({conditionOptions: this.addNullOption(props.conditions, 'Любое')});
         }
 
         if (props.streets !== prevProps.streets) {
-            this.setState({ streetOptions: this.addNullOption(props.streets, 'Все') });
+            this.setState({streetOptions: this.addNullOption(props.streets, 'Все')});
         }
 
         if (props.nearby !== prevProps.nearby) {
-            this.setState({ nearbyOptions: this.addNullOption(props.nearby, 'Все') });
+            this.setState({nearbyOptions: this.addNullOption(props.nearby, 'Все')});
         }
     }
 
     addNullOption(options, name) {
         let optionsCopy = options.slice();
-        optionsCopy.splice(0, 0, { id: null, name });
+        optionsCopy.splice(0, 0, {id: null, name});
         return optionsCopy;
     }
 
     loadStreetOptions(input, callback) {
         if (!input || input.length < 3) {
-            callback(null, { options: [] });
+            callback(null, {options: []});
             return;
         }
 
@@ -60,11 +65,11 @@ export default class Filters extends PureComponent {
             option => option.name && option.name.toLowerCase().indexOf(normalizedInput) >= 0
         );
 
-        callback(null, { options });
+        callback(null, {options});
     }
 
     handleStreetSearchInputChange(streetSearchInput) {
-        this.setState({ streetSearchInput });
+        this.setState({streetSearchInput});
     }
 
     getParticipantTypeParams(props) {
@@ -72,49 +77,67 @@ export default class Filters extends PureComponent {
 
         const selectedParticipantTypeOption = props.selectedParticipantType;
 
-        return { participantTypeOptions, selectedParticipantTypeOption };
+        return {participantTypeOptions, selectedParticipantTypeOption};
     }
 
-    getOnlyDeadOption(props){
+    getOnlyDeadOption(props) {
         const selectedOnlyDeadOption = props.selectedOnlyDead;
-        return { selectedOnlyDeadOption };
+        return {selectedOnlyDeadOption};
     }
 
     render() {
-        const { state, props } = this;
+        const {state, props} = this;
 
         const selectedMvcTypeOption = state.mvcTypeOptions.find(opt => opt.id === props.selectedMvcType);
         const selectedOffenceOption = state.offenceOptions.find(opt => opt.id === props.selectedOffence);
         const selectedStreetOption = state.streetOptions.find(opt => opt.id === props.selectedStreet);
         const selectedNearbyOption = state.nearbyOptions.find(opt => opt.id === props.selectedNearby);
+        const selectedConditionOption = state.conditionOptions.find(opt => opt.id === props.selectedCondition);
 
-        const { participantTypeOptions, selectedParticipantTypeOption } = this.getParticipantTypeParams(this.props);
-        const { selectedOnlyDeadOption } = this.getOnlyDeadOption(this.props);
+        const {participantTypeOptions, selectedParticipantTypeOption} = this.getParticipantTypeParams(this.props);
+        const {selectedOnlyDeadOption} = this.getOnlyDeadOption(this.props);
+        const filtersApplied = [selectedMvcTypeOption, selectedOffenceOption, selectedStreetOption,
+            selectedNearbyOption, selectedConditionOption].some((x) => x.id != null)
+            || participantTypeOptions.length != selectedParticipantTypeOption.length
+            || selectedOnlyDeadOption
 
         return (
             <div className="filters">
+                {filtersApplied ?
+                    <div className="d-flex justify-content-between align-items-start flex-wrap ">
+                        <button
+                            className={'btn ' + (this.props.showStats ? ' active' : '')}
+                            onClick={this.props.onFilterReset}
+                        ><i
+                            className={"fa fa-filter"} aria-hidden="true">
+
+                        </i>
+                            &#160;Очистить фильтры
+                        </button>
+                    </div>
+                    : null}
                 <div className="d-flex justify-content-between align-items-start flex-wrap map-stats-switcher">
                     <button
                         className={'btn mr-2 mb-1' + (!this.props.showStats ? ' active' : '')}
                         onClick={this.props.onShowMap}
                     ><i
-                            className={"fa fa-map-o"} aria-hidden="true">
+                        className={"fa fa-map-o"} aria-hidden="true">
 
                     </i>
                         &#160;Карта
                     </button>
-                    
+
                     <button
                         className={'btn ' + (this.props.showStats ? ' active' : '')}
                         onClick={this.props.onShowStats}
                     ><i
-                            className={"fa fa-bar-chart"} aria-hidden="true">
+                        className={"fa fa-bar-chart"} aria-hidden="true">
 
                     </i>
                         &#160;Статистика
                     </button>
                 </div>
-                
+
                 <div className="map-legend">
                     <span>Щелкните на кружок на карте, чтобы посмотреть подробности</span>
 
@@ -129,7 +152,12 @@ export default class Filters extends PureComponent {
                     <div>
                         <CheckBox
                             id="onlyDeadFilter"
-                            item={{id: 'onlyDead', name: 'onlyDead', label: 'только смертельные ДТП', value: selectedOnlyDeadOption}}
+                            item={{
+                                id: 'onlyDead',
+                                name: 'onlyDead',
+                                label: 'только смертельные ДТП',
+                                value: selectedOnlyDeadOption
+                            }}
                             handleCheckboxChange={this.props.onOnlyDeadChange}
                         />
 
@@ -162,6 +190,19 @@ export default class Filters extends PureComponent {
                             onChange={props.onMvcTypeChange}
                             options={state.mvcTypeOptions}
                             value={selectedMvcTypeOption}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="conditionsFilter">
+                            По условиям
+                        </label>
+
+                        <FilterSelect
+                            id="conditionsFilter"
+                            onChange={props.onConditionTypeChange}
+                            options={state.conditionOptions}
+                            value={selectedConditionOption}
                         />
                     </div>
 
@@ -213,7 +254,11 @@ export default class Filters extends PureComponent {
                         </label>
 
                         <FileInput
-                            attrs={{"id": "markersInput", "accept": ".txt, .json", 'class': 'form-control form-control-sm'}}
+                            attrs={{
+                                "id": "markersInput",
+                                "accept": ".txt, .json",
+                                'class': 'form-control form-control-sm'
+                            }}
                             onChange={props.onMarkersChange}
                         />
                     </div>
@@ -231,6 +276,7 @@ Filters.props = {
     mvcTypes: PropTypes.object.isRequired,
     nearby: PropTypes.array.isRequired,
     offences: PropTypes.object.isRequired,
+    conditions: PropTypes.object.isRequired,
     participantTypes: PropTypes.array.isRequired,
     onDateRangeChange: PropTypes.func,
     onMvcTypeChange: PropTypes.func,
@@ -241,12 +287,15 @@ Filters.props = {
     onShowStats: PropTypes.func,
     onStreetChange: PropTypes.func,
     onOnlyDeadChange: PropTypes.func,
+    onConditionTypeChange: PropTypes.func,
+    onFilterReset: PropTypes.func,
     selectedMvcType: PropTypes.any,
     selectedNearby: PropTypes.any,
     selectedOffence: PropTypes.any,
     selectedStreet: PropTypes.any,
     selectedParticipantType: PropTypes.any,
     selectedOnlyDead: PropTypes.any,
+    selectedCondition: PropTypes.any,
     showStats: PropTypes.bool,
     streets: PropTypes.object.isRequired,
 };

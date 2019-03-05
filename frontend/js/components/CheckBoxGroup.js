@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import CheckBox from './CheckBox';
 
@@ -8,51 +8,32 @@ export default class CheckBoxGroup extends Component {
         super(props);
         this.toggleCheckboxGroupChange = this.toggleCheckboxGroupChange.bind(this);
         this.setChecked = this.setChecked.bind(this);
-        this.selectedCheckboxes = new Set();
-
-        if (this.props.selectedCheckBoxes != null) {
-            this.props.items.forEach(function (item) {
-                if (this.props.selectedCheckBoxes.includes(item.id) === true) {
-                    this.selectedCheckboxes.add(item.id)
-                }
-            }, this)
-        }
-
     }
 
-    toggleCheckboxGroupChange(item){
 
-
-        if (this.selectedCheckboxes.has(item.id)) {
-          this.selectedCheckboxes.delete(item.id);
+    toggleCheckboxGroupChange(item) {
+        let newSelectedCheckboxes = new Set(this.props.selectedCheckBoxes);
+        if (newSelectedCheckboxes.has(item.id)) {
+            newSelectedCheckboxes.delete(item.id);
         } else {
-
-          this.selectedCheckboxes.add(item.id);
-
+            newSelectedCheckboxes.add(item.id);
         }
-        this.props.handleCheckboxGroupChange(this.selectedCheckboxes);
-
-
+        this.props.handleCheckboxGroupChange(newSelectedCheckboxes);
     }
 
     setChecked(item) {
-        let new_item = item
-        if (this.selectedCheckboxes.has(item.id)){
-            new_item.value = true
-        } else {
-            new_item.value = false
-        }
-        return new_item
+        item.value = this.props.selectedCheckBoxes.includes(item.id)
+        return item
     }
 
 
     createCheckbox(item) {
-      return (
-              <CheckBox
-                  key={"CheckBox-" + item.id}
-                  item={this.setChecked(item)}
-                  handleCheckboxChange={this.toggleCheckboxGroupChange}
-              />
+        return (
+            <CheckBox
+                key={"CheckBox-" + item.id}
+                item={this.setChecked(item)}
+                handleCheckboxChange={this.toggleCheckboxGroupChange}
+            />
         );
     }
 
