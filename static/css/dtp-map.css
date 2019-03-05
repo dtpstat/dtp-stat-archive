@@ -103,6 +103,11 @@ input.form-control:focus {
     margin-top: 15px;
 }
 
+.map-legend label {
+    margin-bottom: 0;
+    margin-left: 5px;
+}
+
 .legend-circle {
     display: inline-block;
     width: 0;
@@ -252,3 +257,4 @@ input.form-control:focus {
 
     padding: 1px
 }
+
