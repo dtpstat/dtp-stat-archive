@@ -29,6 +29,8 @@ from dtp_parser2.dtpparser.spiders.region_spider import RegionSpider
 from dtp_parser2.dtpparser.spiders.dtp_spider import DtpSpider
 from dtp_parser2 import update_dtp
 
+from dtp_parser2 import geocoder
+
 
 def open_csv(link):
     with open(link, 'r', encoding='utf-8') as f:
@@ -66,13 +68,21 @@ def download_regions():
 
 
 def get_regions_from_file():
-    models.Region.objects.all().delete()
     regions_data = open_csv("data/regions.csv")
 
     for region in regions_data:
-        region_item, created = models.Region.objects.get_or_create(
-            oktmo_code=region[1], level=region[3]
-        )
+        if region[7]:
+            parent_region = get_object_or_404(models.Region, oktmo_code=region[8],level=1)
+            region_item, created = models.Region.objects.get_or_create(
+                oktmo_code=region[1],
+                level=region[3],
+                parent_region_id=parent_region.id
+            )
+        else:
+            region_item, created = models.Region.objects.get_or_create(
+                oktmo_code=region[1],
+                level=region[3]
+            )
 
         if created:
             region_item.name = region[0]
@@ -81,9 +91,6 @@ def get_regions_from_file():
         region_item.latitude = region[5]
         region_item.longitude = region[6]
         region_item.status = True if region[4] == "TRUE" else False
-
-        if region[7]:
-            region_item.parent_region = get_object_or_404(models.Region, oktmo_code=region[8],level=1)
 
         region_item.save()
 
@@ -106,8 +113,7 @@ def get_dtp():
 
 
 def geocode_dtp():
-    pass
-
+    geocoder.new_geocoder()
 
 def load(data):
     if len(data) > 0:

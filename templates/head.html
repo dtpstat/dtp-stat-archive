@@ -30,7 +30,6 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/49130284" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
 
-<link  rel=“icon”  type=“image/x-icon” href="{% static "media/logo.png" %}"/>
 <meta charset="UTF-8">
 
 <meta name="description" CONTENT="{% if mvc %}{{ mvc.datetime }}, {{ mvc.type }}, пострадали-{{ mvc.injured }}, погибли-{{ mvc.dead }}{% else %}Карта ДТП{% if region.parent_region %} – {{ region }} ({{ region.parent_region }}){% elif region %} – {{ region }}{% endif %}{% endif %}">

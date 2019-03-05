@@ -18,7 +18,7 @@ export function calcRangesForDatePicker(minDate, maxDate) {
 export function getYearRange() {
     let currentYear = moment().year();
     return [
-        moment("2018-01-01"),
-        moment("2018-11-30")
+        moment("2019-01-01"),
+        moment("2019-01-31")
     ];
 }

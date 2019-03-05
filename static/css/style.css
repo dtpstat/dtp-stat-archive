@@ -140,7 +140,11 @@ footer p {
 
 .value_preposition .region-list > * {
     display: inline-block;
-    margin: 0 10px;
+    margin: 10px 10px;
+}
+
+.value_preposition .region-list a {
+    text-decoration: underline;
 }
 
 .value_preposition h2 {
