@@ -221,6 +221,7 @@ export default class Map extends Component {
         map.addLayer(osm);
         map.on('resize moveend zoomend', this.handleMapChanges);
         map.on('zoomend', this.handleZoomEnd);
+        L.control.scale().addTo(map);
         L.control.locate().addTo(map);
 
         this.map = map;
