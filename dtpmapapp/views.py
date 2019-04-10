@@ -29,7 +29,7 @@ def region(request, region_alias):
 
     user_agent = user_agents.parse(request.META['HTTP_USER_AGENT'])
 
-    if region_item.status or region_item.parent_region.status:
+    if region_item.status or (region_item.level == 2 and region_item.parent_region.status):
         return render(request, 'area.html', context={
             "region": region_item,
             "region_alias": region_alias,

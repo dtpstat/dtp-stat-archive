@@ -53,7 +53,6 @@ def get_tech_data():
 
 
 def download_regions():
-    print("lol")
     if os.path.exists("data/regions.json"):
         os.remove("data/regions.json")
 
