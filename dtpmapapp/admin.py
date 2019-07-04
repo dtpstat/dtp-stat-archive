@@ -1,12 +1,14 @@
 from django.contrib import admin
-from . import models
-# Register your models here.
+from .models import Region, MVC
 
-@admin.register(models.Region)
 class RegionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'oktmo_code',  'parent_region', 'status')
+    search_fields = ['name']
+
+admin.site.register(Region, RegionAdmin)
 
 
-@admin.register(models.MVC)
 class MVCAdmin(admin.ModelAdmin):
     pass
+
+admin.site.register(MVC)
