@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from datetime import datetime, timedelta
 
-from dtp_parser.geocoder_51c import Geocoder_51c
+from .geocoder import Geocoder_51c
 
 import django
 sys.path.append(os.path.join(os.path.dirname(__file__), '../dtpmap/dtpmap'))
