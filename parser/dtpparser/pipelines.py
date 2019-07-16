@@ -5,8 +5,8 @@ import json
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from dtp_parser2.extra import open_json
-from dtp_parser2.extra import save_json
+from parser.extra import open_json
+from parser.extra import save_json
 
 hostname = 'localhost'
 username = 'dtpmap'

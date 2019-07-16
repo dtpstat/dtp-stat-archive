@@ -25,11 +25,11 @@ from django.shortcuts import get_object_or_404
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
-from dtp_parser2.dtpparser.spiders.region_spider import RegionSpider
-from dtp_parser2.dtpparser.spiders.dtp_spider import DtpSpider
-from dtp_parser2 import update_dtp
+from parser.dtpparser.spiders.region_spider import RegionSpider
+from parser.dtpparser.spiders.dtp_spider import DtpSpider
+from parser import update_dtp
 
-from dtp_parser2 import geocoder
+from parser import geocoder
 
 
 def open_csv(link):
@@ -57,7 +57,7 @@ def download_regions():
         os.remove("data/regions.json")
 
     settings = Settings()
-    os.environ['SCRAPY_SETTINGS_MODULE'] = 'dtp_parser2.dtpparser.settings'
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'parser.dtpparser.settings'
     settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
     settings.setmodule(settings_module_path, priority='project')
     process = CrawlerProcess(settings)
@@ -98,7 +98,7 @@ def download_dtp():
     if os.path.exists("data/dtp.json"):
         os.remove("data/dtp.json")
     settings = Settings()
-    os.environ['SCRAPY_SETTINGS_MODULE'] = 'dtp_parser2.dtpparser.settings'
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'parser.dtpparser.settings'
     settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
     settings.setmodule(settings_module_path, priority='project')
     process = CrawlerProcess(settings)
