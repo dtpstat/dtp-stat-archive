@@ -8,7 +8,7 @@ import json
 from ast import literal_eval
 import urllib.parse as urlparse
 
-from dtp_parser2.dtpparser.items import RegionItem
+from parser.dtpparser.items import RegionItem
 
 
 class RegionSpider(scrapy.Spider):

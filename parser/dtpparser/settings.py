@@ -11,8 +11,8 @@
 
 BOT_NAME = 'dtpparser'
 
-SPIDER_MODULES = ['dtp_parser2.dtpparser.spiders']
-NEWSPIDER_MODULE = 'dtp_parser2.dtpparser.spiders'
+SPIDER_MODULES = ['parser.dtpparser.spiders']
+NEWSPIDER_MODULE = 'parser.dtpparser.spiders'
 
 LOG_LEVEL='INFO'
 FEED_EXPORT_ENCODING = 'utf-8'
