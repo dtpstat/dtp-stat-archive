@@ -20,16 +20,19 @@ except locale.Error:
 warnings.filterwarnings('ignore')
 
 from dtpmapapp import models
+from dtpmapapp import utils
 from django.shortcuts import get_object_or_404
-
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
+
 from parser.dtpparser.spiders.region_spider import RegionSpider
 from parser.dtpparser.spiders.dtp_spider import DtpSpider
 from parser import update_dtp
 
 from parser import geocoder
+
+
 
 
 def open_csv(link):
@@ -114,6 +117,7 @@ def get_dtp():
 def geocode_dtp():
     geocoder.new_geocoder()
 
+
 def load(data):
     if len(data) > 0:
         for item in data:
@@ -129,6 +133,9 @@ def load(data):
                 get_dtp()
             elif item == "geocode_dtp":
                 geocode_dtp()
+            elif item == "create_dump":
+                utils.create_dump()
+
     else:
         get_tech_data()
         #download_regions()
