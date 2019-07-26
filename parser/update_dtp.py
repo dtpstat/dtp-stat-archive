@@ -14,7 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dtpmap.settings")
 django.setup()
 
 from django.db import transaction
-
+from django.contrib.gis.geos import Point
 from dtpmapapp import models
 from django.shortcuts import get_object_or_404
 
@@ -66,6 +66,12 @@ def add_dtp(source_crash_data):
         alias=source_crash_data['KartId']
     )
 
+    source_data_item = models.SourceData(
+        mvc=mvc_item,
+        data=source_crash_data
+    )
+    source_data_item.save()
+
     date_time = datetime.strptime(source_crash_data['date'] + " " + source_crash_data['Time'], '%d.%m.%Y %H:%M')
 
     mvc_item.region_id=area.id
@@ -79,19 +85,17 @@ def add_dtp(source_crash_data):
     mvc_item.conditions=get_conditions(source_crash_data)
 
     geo_data = update_geolocation(area, source_crash_data)
-    mvc_item.street_id = geo_data['street_id']
-    mvc_item.address = geo_data['address']
-    mvc_item.latitude = geo_data['latitude']
-    mvc_item.longitude = geo_data['longitude']
-    mvc_item.geo_updated = geo_data['geo_updated']
+    if source_data_item.data['infoDtp']['COORD_W'] != source_crash_data['infoDtp']['COORD_W'] or source_data_item.data['infoDtp']['COORD_L'] != source_crash_data['infoDtp']['COORD_L']:
+        mvc_item.street_id = geo_data['street_id']
+        mvc_item.address = geo_data['address']
+        mvc_item.latitude = geo_data['latitude']
+        mvc_item.longitude = geo_data['longitude']
+        mvc_item.geo_updated = geo_data['geo_updated']
+
+    mvc_item.point = Point(mvc_item.longitude, mvc_item.latitude)
+    mvc_item.point_source = Point(geo_data['longitude'], geo_data['latitude'])
 
     mvc_item.save()
-
-    source_data_item = models.SourceData(
-        mvc=mvc_item,
-        data=source_crash_data
-    )
-    source_data_item.save()
 
     mvc_item.participant_set.clear()
 

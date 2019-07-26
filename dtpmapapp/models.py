@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.contrib.gis.db.models import PointField
 
 class Region(models.Model):
     name = models.CharField(max_length=1000, help_text="Region name", null=True, blank=True, default=None, db_index=True)
@@ -84,6 +85,8 @@ class MVC(models.Model):
     nearby = models.ManyToManyField(Nearby, help_text="Nearby objects", db_index=True)
     geo_updated = models.BooleanField(help_text="Geo updated", default=None, null=True)
     created_at = models.DateTimeField(auto_now=True)
+    point = PointField(help_text="MVC point", default=None, null=True)
+    point_source = PointField(help_text="MVC source point", default=None, null=True)
 
     def __str__(self):
         return self.type.name + " " + self.region.name + " " + str(self.datetime)

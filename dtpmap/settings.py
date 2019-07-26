@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'django.contrib.sitemaps',
     'django.contrib.sites',
+    'django.contrib.gis'
 ]
 
 SITE_ID = 1
@@ -83,7 +84,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dtpmap.wsgi.application'
 
 DATABASES = {
-    'default': env.db(default='postgres://django:django@localhost:5432/django'),
+    'default': env.db(default='postgis://django:django@localhost:5432/django'),
+
 }
 
 # Password validation
@@ -131,12 +133,17 @@ WEBPACK_LOADER = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'default_cache',
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'default_cache',
+        }
     }
-}
+else:
+    pass
+
+
 
 try:
     from .local_settings import *
