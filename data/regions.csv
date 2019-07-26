@@ -6,7 +6,7 @@ name,code,alias,level,status,latitude,longitude,parent_name,parent_code
 Чукотский автономный округ,77,chukotskii-avtonomnyi-okrug,1,FALSE,65.982613,174.432311,,
 Республика Саха (Якутия),98,respublika-sakha-iakutiia,1,FALSE,65.061073,119.845652,,
 Республика Коми,87,respublika-komi,1,FALSE,64.125463,54.789669,,
-Архангельская область,11,arkhangelskaia-oblast,1,FALSE,63.637517,43.336661,,
+Архангельская область,11,arkhangelskaia-oblast,1,TRUE,63.637517,43.336661,,
 Республика Карелия,86,respublika-kareliia,1,FALSE,63.621324,33.232608,,
 Магаданская область,44,magadanskaia-oblast,1,FALSE,62.575815,154.036835,,
 Ханты-Мансийский автономный округ - Югра,71100,khanty-mansiiskii-avtonomnyi-okrug-iugra,1,FALSE,61.588912,65.897508,,
