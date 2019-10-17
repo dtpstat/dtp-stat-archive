@@ -136,7 +136,7 @@ $ npm run build-production
 - Скопировать `dtpmap/.env.tmpl -> dtpmap/.env`
 - Отредактировать `dtpmap/.env`
 
-###Frontend:
+### Frontend:
 
 (самый простой способ)
 - Ставите Node.js https://nodejs.org/en/
