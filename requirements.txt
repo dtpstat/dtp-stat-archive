@@ -19,7 +19,7 @@ soupsieve==1.7.3
 tqdm==4.30.0
 ua-parser==0.8.0
 Unidecode==1.0.23
-urllib3==1.24.2
+urllib3==1.26.5
 user-agents==1.1.0
 scrapy==1.6.0
 ijson==2.3
